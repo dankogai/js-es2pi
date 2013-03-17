@@ -12,11 +12,13 @@
     'use strict';
     // exported functions: function public(...){...}
     // private  functions: var private = function(...){...}
+    var functionToString = Function.prototype.toString;
     function isFunction(f)  { return typeof(f) === 'function' };
     var _isBuiltIn = function(f) {
+        if (!f) f = Function;
         if (!isFunction(f)) return false;
         try {
-            var body = (''+f).replace(/^[^{]+/,'');
+            var body = functionToString.call(f).replace(/^[^{]+/,'');
             return !(new Function(body));
         } catch (e) {
             return true;
