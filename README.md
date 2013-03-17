@@ -1,4 +1,4 @@
-js-extend-es5
-=============
+es2pi.js
+========
 
-ES6 polyfills and more
+ES6 + a little more on top of ES5
