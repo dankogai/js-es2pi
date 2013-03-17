@@ -1,4 +1,4 @@
-[![build status](https://secure.travis-ci.org/dankogai/js-es2pi.png)](http://travis-ci.org/dankogai/js-es6pi)
+[![build status](https://secure.travis-ci.org/dankogai/js-es2pi.png)](http://travis-ci.org/dankogai/js-es2pi)
 
 es2pi.js
 ========
