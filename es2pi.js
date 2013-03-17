@@ -674,7 +674,10 @@
             },
             values: function() { 
                 return _Map.prototype.keys.apply(this) 
-            }
+            },
+            // mask'em out
+            get: {value:undefined},
+            set: {value:undefined}
         }));
         // native but incomplete so relocate
         if (HASWEAKMAP) {
