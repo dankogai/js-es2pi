@@ -32,4 +32,5 @@ Table of Contents
 See Also
 --------
 
-http://wiki.ecmascript.org/doku.php?id=harmony:proposals
++ http://wiki.ecmascript.org/doku.php?id=harmony:proposals
++ https://wiki.mozilla.org/ES6_plans
