@@ -14,9 +14,11 @@ On es2pi:
 ---------
 
 + String.isString( *unknown* )
-+ String.prototype.isString()
-+ String.prototype.typeOf()
+
 + String.prototype.classOf()
++ String.prototype.typeOf()
++ String.prototype.isString()
++ String.prototype.isPrimitive()
 
 + String.prototype.toBoolean()
 + String.prototype.toNumber( *[base]* )

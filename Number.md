@@ -17,9 +17,11 @@ On es2pi:
 ---------
 
 + Number.isNumber( *unknown* )
-+ Number.prototype.isNumber()
-+ Number.prototype.typeof()
+
 + Number.prototype.classOf()
++ Number.prototype.typeof()
++ Number.prototype.isNumber()
++ Number.prototype.isPrimitive()
 
 + Number.prototype.isFinite()
 + Number.prototype.isInteger()

@@ -10,9 +10,11 @@ On es2pi:
 
 + Boolean.isBoolean()
 
-+ Boolean.prototype.isBoolean()
-+ Boolean.prototype.typeOf()
 + Boolean.prototype.classOf()
++ Boolean.prototype.typeOf()
++ Boolean.prototype.isBoolean()
++ Boolean.prototype.isPrimitive()
+
 + Boolean.prototype.toNumber()
 
 See Also:

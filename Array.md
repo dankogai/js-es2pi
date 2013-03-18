@@ -13,9 +13,9 @@ On es6pi:
 + Array.prototype.repeat( *times* )
 + Array.prototype.sorted( *[ comp ]* )
 
-+ Array.prototype.isArray()
 + Array.prototype.typeOf()
 + Array.prototype.classOf()
++ Array.prototype.isArray()
 
 And `Array.`*fun* for corresponding `Array.`prototype.*fun* like Firefox
 like `Array.sort`

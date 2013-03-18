@@ -34,8 +34,9 @@ describe('Type Checkers', function() {
         it(asStr(v) + '.isPrimitive() === ' + isNil,
            eq(v.isPrimitive(), isPrimitive));
         Object.keys(isType).forEach(function(k2){
-            it(asStr(v) + '.' + k2 + '() === ' + (k === k2),
-               eq(v[k2](), k === k2));
+            var pred = k === k2 || (k2 === 'isObject' && Object(v) === v);
+            it(asStr(v) + '.' + k2 + '() === ' + pred,
+               eq(v[k2](), pred));
         });
     });
     Object.extend(isType, nullish);
@@ -54,10 +55,10 @@ describe('Type Checkers', function() {
         it('Object.isPrimitive(' + asStr(v) + ') === ' + isNil,
            eq(Object.isPrimitive(v), isPrimitive));
         Object.keys(isType).forEach(function(k2){
-            var pred = k === k2
-            || (k == 'isObject' && Object(isType[k2]) === isType[k2]);
-            it('Object.' + k + '(' + asStr(isType[k2]) + ') === ' + pred,
-               eq(Object[k](isType[k2]), pred));
+            var v2 = isType[k2],
+            pred = k === k2 || (k === 'isObject' && Object(v2) === v2);
+            it('Object.' + k + '(' + asStr(v2) + ') === ' + pred,
+               eq(Object[k](v2), pred));
         });
     });
 });

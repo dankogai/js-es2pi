@@ -8,6 +8,11 @@ On es2pi:
 ---------
 
 + Function.isFunction( *unknown* )
+
++ Function.prototype.classOf()
++ Function.prototype.typeOf()
++ Function.prototype.isFunction()
+
 + Function.isBuiltIn( *unknown* )
 + Function.prototype.isFunction()
 + Function.prototype.isBuiltIn()
