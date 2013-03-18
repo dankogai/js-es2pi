@@ -1,0 +1,29 @@
+{
+  "name": "js-es2pi",
+  "version": "0.0.1",
+  "description": "ES6 + a little more on top of ES5",
+  "main": "es2pi.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies":{
+      "mocha" : "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dankogai/js-es2pi.git"
+  },
+  "keywords": [
+    "ES5",
+    "ES6",
+    "shim",
+    "polyfill"
+  ],
+  "author": "Dan Kogai",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "510f4e777efb01392415535293346423d1963b93"
+}
