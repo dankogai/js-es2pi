@@ -388,7 +388,11 @@
         encodeURI: function() { return encodeURI(this) },
         encodeURIComponent: function() { return encodeURIComponent(this) },
         decodeURI: function() { return decodeURI(this) },
-        decodeURIComponent: function() { return decodeURIComponent(this) }
+        decodeURIComponent: function() { return decodeURIComponent(this) },
+        interpolate: function(o, r) {
+            if (!r) r = /#\{(.+?)\}/g;
+            return this.replace(r, function(m, k) { return o[k] });
+        }
     }));
     // Array
     defaults(Array, defSpecs({

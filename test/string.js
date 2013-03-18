@@ -33,3 +33,13 @@ describe('String.prototype.escape', function() {
     it ('euc.decodeURIComponent() === chars',
         eq(euc.decodeURIComponent(), chars));
 });
+
+describe('String.prototype.interpolate', function() {
+    var t = "#{here} #{there} #{nowhere}",
+    o = {here:'koko', there:'asoko'},
+    r;
+    it(t, eq(t.interpolate(o), 'koko asoko undefined'));
+    t = "$[here] $[there] $[nowhere]";
+    r = /\$\[(.+?)\]/g;
+    it(t + ", "+ r, eq(t.interpolate(o, r), 'koko asoko undefined'));
+});
