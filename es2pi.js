@@ -384,10 +384,11 @@
         contains: function(s) { return this.indexOf(s) !== -1 },
         // they should've been here from the 1st place
         escape: function() { return escape(this) },
-        encodeURI: function() { encodeURI(this) },
+        unescape: function() { return unescape(this) },
+        encodeURI: function() { return encodeURI(this) },
         encodeURIComponent: function() { return encodeURIComponent(this) },
-        dncodeURI: function() { return decodeURI(this) },
-        dncodeURIComponent: function() { return _decodeURIComponent(this) }
+        decodeURI: function() { return decodeURI(this) },
+        decodeURIComponent: function() { return decodeURIComponent(this) }
     }));
     // Array
     defaults(Array, defSpecs({
