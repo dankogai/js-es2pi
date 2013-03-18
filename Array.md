@@ -4,16 +4,18 @@ Array
 From ES6:
 ---------
 
-+ Array.from()
-+ Array.of()
-+ Array.prototype.repeat()
-+ Array.prototype.sorted()
++ Array.from( *array_like* )
++ Array.of( *[ arg0, arg1 ...]* )
 
 On es6pi:
 ---------
 
-+ Array.prototype.repeat()
-+ Array.prototype.sorted()
++ Array.prototype.repeat( *times* )
++ Array.prototype.sorted( *[ comp ]* )
+
++ Array.prototype.isArray()
++ Array.prototype.typeOf()
++ Array.prototype.classOf()
 
 And `Array.`*fun* for corresponding `Array.`prototype.*fun* like Firefox
 like `Array.sort`

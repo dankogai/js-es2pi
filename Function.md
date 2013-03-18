@@ -7,8 +7,8 @@ From ES6:
 On es2pi:
 ---------
 
-+ Function.isFunction(`unknown`)
-+ Function.isBuiltIn(`unknown`)
++ Function.isFunction( *unknown* )
++ Function.isBuiltIn( *unknown* )
 + Function.prototype.isFunction()
 + Function.prototype.isBuiltIn()
 

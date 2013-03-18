@@ -6,21 +6,25 @@ From ES6:
 
 + Number.MAX_INTEGER
 + Number.EPSILON
-+ Number.isFinite()
-+ Number.isNaN()
-+ Number.parseInt()
-+ Number.parseFloat()
-+ Number.isInteger()
-+ Number.toInteger()
++ Number.isFinite( *unknown* )
++ Number.isNaN( *unknown* )
++ Number.parseInt( *string* *[, base* )
++ Number.parseFloat( *string* *[, base]* )
++ Number.isInteger( *unknown* )
++ Number.toInteger( *unknown* )
 
 On es2pi:
 ---------
 
-+ Number.isNumber()
++ Number.isNumber( *unknown* )
++ Number.prototype.isNumber()
++ Number.prototype.typeof()
++ Number.prototype.classOf()
+
 + Number.prototype.isFinite()
 + Number.prototype.isInteger()
 + Number.prototype.isNaN()
-+ Number.prototype.isNumber()
+
 + Number.prototype.toBoolean()
 + Number.prototype.toInteger()
 

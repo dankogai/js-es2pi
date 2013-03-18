@@ -4,11 +4,10 @@ Set
 From ES6:
 ---------
 
-+ `Set`
- + Set.prototype.add()
- + Set.prototype.has()
- + Set.prototype.add()
- + Set.prototype.delete()
++ Set()
+ + Set.prototype.add( *value* )
+ + Set.prototype.has( *value* )
+ + Set.prototype.delete( *value* )
  + Set.prototype.values()
  + Set.prototype.clear()
 

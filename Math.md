@@ -4,20 +4,20 @@ Math
 From ES6:
 ---------
 
-+ Math.acosh()
-+ Math.asinh()
-+ Math.atanh()
-+ Math.cbrt()
-+ Math.cosh()
-+ Math.expm1()
-+ Math.hypot()
-+ Math.log2()
-+ Math.log10()
-+ Math.log1p()
-+ Math.sign()
-+ Math.sinh()
-+ Math.tanh()
-+ Math.trunc()
++ Math.acosh( *number* )
++ Math.asinh( *number* )
++ Math.atanh( *number* )
++ Math.cbrt( *number* )
++ Math.cosh( *number* )
++ Math.expm1( *number* )
++ Math.hypot( *number* )
++ Math.log2( *number* )
++ Math.log10( *number* )
++ Math.log1p( *number* )
++ Math.sign( *number* )
++ Math.sinh( *number* )
++ Math.tanh( *number* )
++ Math.trunc( *number* )
 
 On es2pi:
 ---------

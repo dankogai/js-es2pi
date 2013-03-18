@@ -4,11 +4,11 @@ Map
 From ES6:
 ---------
 
-+ `Map`
- + Map.prototype.has()
- + Map.prototype.get()
- + Map.prototype.set()
- + Map.prototype.delete()
++ Map()
+ + Map.prototype.has( *key* )
+ + Map.prototype.get( *key* )
+ + Map.prototype.set( *key*, *value* )
+ + Map.prototype.delete( *key* )
  + Map.prototype.keys()
  + Map.prototype.values()
  + Map.prototype.items()
