@@ -261,7 +261,7 @@
         isBoolean: isBoolean,
         isNumber: isNumber,
         isString: isString,
-        isArray: Array.isArray,
+        isArray: isArray,
         isFunction: isFunction,
         isObject: isObject,
         typeOf: function typeOf(o) {
@@ -401,7 +401,7 @@
     }));
     // Array.prototype
     defaults(Array.prototype, defSpecs({
-        isArray: function isArray()    { return true },
+        isArray: yes,
         //typeOf: function typeOf(){ return 'array' },
         classOf: function classOf() { return 'Array' },
         repeat: function(n) {
