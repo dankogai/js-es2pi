@@ -18,13 +18,13 @@
         if (!f) f = Function;
         if (!isFunction(f)) return false;
         try {
-            var body = functionToString.call(f).replace(/^[^{]+/,'');
+            var body = functionToString.call(f).replace(/^[^{]+/, '');
             return !(new Function(body));
         } catch (e) {
             return true;
         }
     };
-    if (!_isBuiltIn(Object.freeze)){ // am I paranoid ?
+    if (!_isBuiltIn(Object.freeze)) { // am I paranoid ?
         throw Error('ES5 support required');
     }
     var create = Object.create,
@@ -50,7 +50,7 @@
         getOwnPropertyNames(src).forEach(function(k) {
             defineProperty(
                 dst, k, getOwnPropertyDescriptor(src, k)
-            )
+            );
         });
         return dst;
     };
@@ -62,18 +62,18 @@
         });
         return dst;
     };
-    var defspec = extend( 
+    var defspec = extend(
         create(null), getOwnPropertyDescriptor(Object, 'freeze')
     );
     delete defspec.value;
-    var toSpec = function(v) { 
+    var toSpec = function(v) {
         return typeof(v) !== 'function' ? v
             : extend(extend(create(null), defspec), { value: v });
     };
     var defSpecs = function(src) {
         var specs = create(null);
         getOwnPropertyNames(src).forEach(function(k) {
-            defineProperty(specs, k, toSpec(src[k]))
+            defineProperty(specs, k, toSpec(src[k]));
         });
         return specs;
     };
@@ -82,30 +82,30 @@
     function isBoolean(o)   { return typeof(o) == 'boolean'};
     function isNumber(o)    { return typeof(o) == 'number' };
     function isString(o)    { return typeof(o) == 'string' };
-    var _typeOf = function(o){ return o === null ? 'null' : typeof(o) };
+    var _typeOf = function(o) { return o === null ? 'null' : typeof(o) };
     var signatureOf = function(o) { return toString.call(o) };
-    function is (x, y) {
+    function is(x, y) {
         return x === y
             ? x !== 0 ? true
             : (1 / x === 1 / y) // +-0
         : (x !== x && y !== y); // NaN
     };
-    function isnt (x, y) { return !is(x, y) };
+    function isnt(x, y) { return !is(x, y) };
     var defaultCK = {
-        descriptors:true,
-        extensibility:true, 
-        enumerator:getOwnPropertyNames
+        descriptors: true,
+        extensibility: true,
+        enumerator: getOwnPropertyNames
     };
     var HASWEAKMAP = (function() { // paranoia check
         try {
             var wm = WeakMap();
             wm.set(wm, wm);
             return wm.get(wm) === wm;
-        } catch(e) {
+        } catch (e) {
             return false;
         }
     })();
-    function equals (x, y, ck) {
+    function equals(x, y, ck) {
         var vx, vy;
         if (HASWEAKMAP) {
             vx = WeakMap();
@@ -114,7 +114,7 @@
         ck = defaults(ck || {}, defaultCK);
         return (function _equals(x, y) {
             if (isPrimitive(x)) return is(x, y);
-            if (isFunction(x))  return is(x, y);
+            if (isFunction(x)) return is(x, y);
             // check deeply
             var sx = signatureOf(x), sy = signatureOf(y);
             var i, l, px, py, sx, sy, kx, ky, dx, dy, dk;
@@ -168,7 +168,7 @@
             case '[object String]':
             case '[object Number]':
             case '[object Boolean]':
-                return ''+x === ''+y;
+                return '' + x === '' + y;
             default:
                 throw TypeError(sx + ' not supported');
             }
@@ -205,7 +205,7 @@
                         if (ck.descriptors) {
                             var desc = getOwnPropertyDescriptor(src, k);
                             if (ck.filter && !ck.filter(desc, k, src)) return;
-                            if (deep && 'value' in desc) 
+                            if (deep && 'value' in desc)
                                 desc.value = _clone(src[k]);
                             defineProperty(dst, k, desc);
                         } else {
@@ -231,8 +231,8 @@
         })(src);
     };
     // Functions that Return constant values
-    function yes(){ return true };
-    function no(){ return false };
+    function yes() { return true };
+    function no() { return false };
     // Object
     defaults(Object, defSpecs({
         // crutial
@@ -244,19 +244,19 @@
         clone: clone,
         equals: equals,
         // object as lesser Map
-        values: function values(o){ 
-            return keys(o).map(function(k){ return o[k] })
+        values: function values(o) {
+            return keys(o).map(function(k) { return o[k] });
         },
         items: function items(o) {
-            return keys(o).map(function(k){ return [k, o[k]] })
+            return keys(o).map(function(k) { return [k, o[k]] });
         },
-        has: function has(o, k){ 
-            return hasOwnProperty.call(o, k)
+        has: function has(o, k) {
+            return hasOwnProperty.call(o, k);
         },
         // types
-        isNull: function isNull(o){ return o === null },
-        isUndefined: function isUndefined(o){ return o === void(0) },
-        isNil: function isNil(o){ return o === void(0) || o === null },
+        isNull: function isNull(o) { return o === null },
+        isUndefined: function isUndefined(o) { return o === void(0) },
+        isNil: function isNil(o) { return o === void(0) || o === null },
         isPrimitive: isPrimitive,
         isBoolean: isBoolean,
         isNumber: isNumber,
@@ -267,25 +267,25 @@
         typeOf: function typeOf(o) {
             return _typeOf(arguments.length < 1 ? this : o);
         },
-        classOf: function classOf(o){ 
-            return signatureOf(o).slice(8,-1)
+        classOf: function classOf(o) {
+            return signatureOf(o).slice(8, -1);
         }
     }));
     // Object.prototype // yes, we can!
     defaults(Object.prototype, defSpecs({
-        isObject:    yes,
-        isArray:     no,
-        isBoolean:   no,
-        isFunction:  no,
-        isNil:       no,
-        isNull:      no,
-        isNumber:    no,
+        isObject: yes,
+        isArray: no,
+        isBoolean: no,
+        isFunction: no,
+        isNil: no,
+        isNull: no,
+        isNumber: no,
         isPrimitive: no,
-        isString:    no,
+        isString: no,
         isUndefined: no,
-        typeOf:  function(){ return 'object' },
-        classOf: function(){
-            return signatureOf(this).slice(8,-1)
+        typeOf: function() { return 'object' },
+        classOf: function() {
+            return signatureOf(this).slice(8, -1);
         }
     }));
     // Function
@@ -294,25 +294,25 @@
         isBuiltIn: _isBuiltIn
     }));
     defaults(Function.prototype, defSpecs({
-        isFunction:  yes,
-        isNil:       no,
-        isNull:      no,
+        isFunction: yes,
+        isNil: no,
+        isNull: no,
         isUndefined: no,
-        typeOf:    function(){ return 'function' },
-        classOf:   function(){ return 'Function' },
-        isBuiltIn: function(){ return _isBuiltIn(this) }
+        typeOf: function() { return 'function' },
+        classOf: function() { return 'Function' },
+        isBuiltIn: function() { return _isBuiltIn(this) }
     }));
     // Boolean
     defaults(Boolean, defSpecs({
         isBoolean: isBoolean
     }));
     defaults(Boolean.prototype, defSpecs({
-        isBoolean:   yes,
-        isObject:    no,
+        isBoolean: yes,
+        isObject: no,
         isPrimitive: yes,
-        typeOf:    function(){ return 'boolean' },
-        classOf:   function(){ return 'Boolean' },
-        toNumber:  function(){ return 1 * this }
+        typeOf: function() { return 'boolean' },
+        classOf: function() { return 'Boolean' },
+        toNumber: function() { return 1 * this }
     }));
     // Number
     var _parseInt = parseInt,
@@ -327,8 +327,8 @@
         parseFloat: _parseFloat,
         isFinite: function(n) { return n === 1 * n && _isFinite(n) },
         isNumber: isNumber,
-        isInteger: function(n) { 
-            return n === 1 * n && _isFinite(n) && n % 1 === 0 
+        isInteger: function(n) {
+            return n === 1 * n && _isFinite(n) && n % 1 === 0;
         },
         isNaN: function(n) { return Object.is(n, NaN) },
         toInteger: function(n) {
@@ -336,20 +336,20 @@
             return Object.is(n, NaN) ? 0
                 : Number.isFinite(n) ? n - n % 1
                 : n;
-        },
+        }
     }));
     // Number.prototype
     defaults(Number.prototype, defSpecs({
-        isNumber:    yes,
-        isObject:    no,
+        isNumber: yes,
+        isObject: no,
         isPrimitive: yes,
-        typeOf:    function(){ return 'number' },
-        classOf:   function(){ return 'Number' },
-        isFinite:  function(){ return _isFinite(this) },
-        isNan:     function(){ return is(this, NaN) },
-        toBoolean: function(){ return !!this },
-        toInteger: function(){ 
-            return this.isFinite() ? this - this % 1 : this
+        typeOf: function() { return 'number' },
+        classOf: function() { return 'Number' },
+        isFinite: function() { return _isFinite(this) },
+        isNan: function() { return is(this, NaN) },
+        toBoolean: function() { return !!this },
+        toInteger: function() {
+            return this.isFinite() ? this - this % 1 : this;
         }
     }));
     // String
@@ -358,15 +358,15 @@
     }));
     // String.prototype
     defaults(String.prototype, defSpecs({
-        isString:    yes,
-        isObject:    no,
+        isString: yes,
+        isObject: no,
         isPrimitive: yes,
         isUndefined: no,
-        typeOf:  function() { return 'string' },
+        typeOf: function() { return 'string' },
         classOf: function() { return 'String' },
         toBoolean: function() { return !!this },
-        toNumber:  function(b) { return parseFloat(this, b||10) },
-        toInteger: function(b){ return parseInt(this, b||10) },
+        toNumber: function(b) { return parseFloat(this, b || 10) },
+        toInteger: function(b) { return parseInt(this, b || 10) },
         // ES6
         // http://wiki.ecmascript.org/doku.php?id=harmony:string_extras
         repeat: function(n) {
@@ -383,11 +383,11 @@
         },
         contains: function(s) { return this.indexOf(s) !== -1 },
         // they should've been here from the 1st place
-        escape: function(){ return escape(this) },
-        encodeURI: function (){ encodeURI(this) },
-        encodeURIComponent: function (){ return encodeURIComponent(this) },
-        dncodeURI: function (){ return decodeURI(this) },
-        dncodeURIComponent: function (){ return _decodeURIComponent(this) }
+        escape: function() { return escape(this) },
+        encodeURI: function() { encodeURI(this) },
+        encodeURIComponent: function() { return encodeURIComponent(this) },
+        dncodeURI: function() { return decodeURI(this) },
+        dncodeURIComponent: function() { return _decodeURIComponent(this) }
     }));
     // Array
     defaults(Array, defSpecs({
@@ -401,9 +401,9 @@
     }));
     // Array.prototype
     defaults(Array.prototype, defSpecs({
-        isArray:     function isArray()    { return true  },
+        isArray: function isArray()    { return true },
         //typeOf: function typeOf(){ return 'array' },
-        classOf: function classOf(){ return 'Array' },
+        classOf: function classOf() { return 'Array' },
         repeat: function(n) {
             var a = this,
             result = [];
@@ -423,7 +423,7 @@
      'concat slice indexOf lastIndexOf',
      'forEach map reduce reduceRight filter some every',
      'repeat sorted']
-        .join(' ').split(' ').forEach(function(name){
+        .join(' ').split(' ').forEach(function(name) {
             var meth = Array.prototype[name];
             arraySpec[name] = function() {
                 var args = slice.call(arguments),
@@ -434,14 +434,14 @@
     defaults(Array, defSpecs(arraySpec));
     // Math
     defaults(Math, defSpecs({
-        acosh: function acosh(n) { return Math.log(n + Math.sqrt(n*n - 1)) },
-        asinh: function asinh(n) { return Math.log(n + Math.sqrt(n*n + 1)) },
-        atanh: function atanh(n) { return 0.5 * Math.log((1+n) / (1-n)) },
-        cbrt:  function cbrt(n) { return Math.pow(n, 1/3) },
-        cosh:  function cosh(n) { return (Math.exp(n) + Math.exp(-n)) / 2 },
+        acosh: function acosh(n) { return Math.log(n + Math.sqrt(n * n - 1)) },
+        asinh: function asinh(n) { return Math.log(n + Math.sqrt(n * n + 1)) },
+        atanh: function atanh(n) { return 0.5 * Math.log((1 + n) / (1 - n)) },
+        cbrt: function cbrt(n) { return Math.pow(n, 1 / 3) },
+        cosh: function cosh(n) { return (Math.exp(n) + Math.exp(-n)) / 2 },
         expm1: function expm1(n) { return Math.exp(n) - 1 },
-        hypot: function hypot(x, y) { return Math.sqrt(x*x + y*y) || +0 },
-        log2:  function log2(n) { return Math.log(n) / Math.LN2 },
+        hypot: function hypot(x, y) { return Math.sqrt(x * x + y * y) || +0 },
+        log2: function log2(n) { return Math.log(n) / Math.LN2 },
         log10: function log10(n) { return Math.log(n) / Math.LN10 },
         log1p: function log1p(n) { return Math.log(1 + n) },
         sign: function sign(n) {
@@ -458,61 +458,61 @@
     }));
     // Map
     // cf: https://github.com/dankogai/js-es6-map
-    var HASITERABLEMAP = (function(){
+    var HASITERABLEMAP = (function() {
         if (!HASWEAKMAP) return false;
         return 'values' in Map();
     })();
-    var HASFOROF = (function(){
+    var HASFOROF = (function() {
         try {
             eval('for(var i of [0,1]){}');
             return true;
-        } catch(e) {
+        } catch (e) {
             // console.log(e);
             return false;
         }
     })();
-    (function(){
+    (function() {
         if (HASITERABLEMAP) return;  // do nothing if Map is full-featured
         if (!HASFOROF) return;       // do nothing if for-of is absent
         // Firefox can take advantage of this.
-        (function(specs){
+        (function(specs) {
             extend(Map.prototype, defSpecs(specs));
         })({
-            items:eval([
+            items: eval([
                 '(function (){',
                 'var result = [];',
                 'for (var i of this) result.push(i);',
                 'return result;',
                 '})'
-            ].join("\n")),
-            keys:eval([
+            ].join('\n')),
+            keys: eval([
                 '(function (){',
                 'var result = [];',
                 'for (var i of this) result.push(i[0]);',
                 'return result;',
                 '})'
-            ].join("\n")),
-            values:eval([
+            ].join('\n')),
+            values: eval([
                 '(function (){',
                 'var result = [];',
                 'for (var i of this) result.push(i[1]);',
                 'return result;',
-                '})',
-            ].join("\n"))
+                '})'
+            ].join('\n'))
         });
-        (function(specs){
+        (function(specs) {
             extend(Set.prototype, defSpecs(specs));
         })({
-            values:eval([
+            values: eval([
                 '(function (){',
                 'var result = [];',
                 'for (var i of this) result.push(i);',
                 'return result;',
-                '})',
-            ].join("\n"))
+                '})'
+            ].join('\n'))
         });
     })();
-    (function(){
+    (function() {
         if (HASITERABLEMAP) return; // do nothing if Map is full-featured
         if (HASFOROF) return;       // see previous (function(){})
         // for the rest of us
@@ -572,7 +572,7 @@
             });
         };
         defaults(_Map.prototype, defSpecs({
-            has: function has(k) {
+            has: function(k) {
                 var t = _typeOf(k),
                 s;
                 if (isPrimitive(k)) {
@@ -581,7 +581,7 @@
                 }
                 return indexOfIdentical(this.__keys, k) >= 0;
             },
-            get: function get(k) {
+            get: function(k) {
                 var t = _typeOf(k),
                 i;
                 if (isPrimitive(k)) {
@@ -591,7 +591,7 @@
                     return i < 0 ? undefined : this.__vals[i];
                 }
             },
-            set: function set(k, v) {
+            set: function(k, v) {
                 var t = _typeOf(k),
                 i, s;
                 if (isPrimitive(k)) {
@@ -610,7 +610,7 @@
                     }
                 }
             },
-            'delete': function (k) { // can't name it in JS
+            'delete': function(k) {
                 var t = _typeOf(k),
                 i, s;
                 if (isPrimitive(k)) {
@@ -631,7 +631,7 @@
                 }
                 return false;
             },
-            keys: function keys() {
+            keys: function() {
                 var keys = [],
                 hash = this.__hash,
                 k;
@@ -640,7 +640,7 @@
                 }
                 return keys.concat(this.__keys);
             },
-            values: function values() {
+            values: function() {
                 var vals = [],
                 hash = this.__hash,
                 k;
@@ -649,7 +649,7 @@
                 }
                 return vals.concat(this.__vals);
             },
-            items: function items() {
+            items: function() {
                 var kv = [],
                 hash = this.__hash,
                 k, i, l;
@@ -661,9 +661,9 @@
                 }
                 return kv;
             },
-            clear: function clear() {
+            clear: function() {
                 var keys = this.keys();
-                while(keys.length) this.delete(keys.pop());
+                while (keys.length) this.delete(keys.pop());
             }
         }));
         // Set
@@ -673,20 +673,22 @@
         };
         _Set.prototype = _Map();
         defaults(_Set.prototype, defSpecs({
-            add: function(k) { 
-                _Map.prototype.set.apply(this, [k, true]) 
+            add: function(k) {
+                _Map.prototype.set.apply(this, [k, true]);
             },
-            values: function() { 
-                return _Map.prototype.keys.apply(this) 
+            values: function() {
+                return _Map.prototype.keys.apply(this);
             },
             // mask'em out
-            get: {value:undefined},
-            set: {value:undefined}
+            get: {value: undefined},
+            set: {value: undefined},
+            keys: {value: undefined},
+            items: {value: undefined}
         }));
         // native but incomplete so relocate
         if (HASWEAKMAP) {
-            extend(_Map, {__Native__:Map});
-            extend(_Set, {__Native__:Set});
+            extend(_Map, {__Native__: Map});
+            extend(_Set, {__Native__: Set});
         }
         // notice extend is used to override the original
         extend(root, defSpecs({
