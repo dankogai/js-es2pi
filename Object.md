@@ -4,19 +4,57 @@ Object
 From ES6:
 ---------
 
-+ Object.is()
-+ Object.isnt()
++ Object.is( *objx*, *objy* )
++ Object.isnt( *objx*, *objy* )
 
 On es2pi:
 --------
 
-+ Object.defaults()
-+ Object.extend()
-+ Object.has(`obj`)
-+ Object.isObject()
-+ Object.isPrimitive()
-+ Object.items(`obj`)
-+ Object.values(`obj`)
+### Deep Comparison and Cloning
+
++ Object.equals( *objx*, *objy* *[, check]* )
++ Object.clone( *src*, *[isdeep, check]* )
+
+### Property Management
+
++ Object.extend( *dst*, *src* )
++ Object.defaults( *dst*, *src* )
+
+### Type Checking
+
++ Object.tyepeOf( *unknown* )
++ Object.classOf( *unknown* )
++ Object.isObject( *unknown* )
++ Object.isPrimitive( *unknown* )
++ Object.isNull( *unknown* )
++ Object.isUndefined( *unknown* )
++ Object.isNil( *unknown* )
++ Object.isBoolean( *unknown* )
++ Object.isNumber( *unknown* )
++ Object.isString( *unknown* )
++ Object.isArray( *unknown* )
++ Object.isFunction( *unknown* )
+
+#### Prototypal Versions
+
++ Object.prototype.tyepeOf()
++ Object.prototype.classOf()
++ Object.prototype.isObject()
++ Object.prototype.isPrimitive()
++ Object.prototype.isNull()
++ Object.prototype.isUndefined()
++ Object.prototype.isNil()
++ Object.prototype.isBoolean()
++ Object.prototype.isNumber()
++ Object.prototype.isString()
++ Object.prototype.isArray()
++ Object.prototype.isFunction()
+
+### Object as a Map
+
++ Object.has( *obj*, *prop* )
++ Object.items( *obj* )
++ Object.values( *obj* )
 
 See Also:
 ---------
