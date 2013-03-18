@@ -230,6 +230,9 @@
             }
         })(src);
     };
+    // Functions that Return constant values
+    function yes(){ return true };
+    function no(){ return false };
     // Object
     defaults(Object, defSpecs({
         // crutial
@@ -270,18 +273,18 @@
     }));
     // Object.prototype // yes, we can!
     defaults(Object.prototype, defSpecs({
-        isObject:    function isObject()   { return true  },
-        isArray:     function isAray()     { return false },
-        isBoolean:   function isBoolean()  { return false },
-        isFunction:  function isFunction() { return false },
-        isNil:       function isNil()      { return false },
-        isNull:      function isNull()     { return false },
-        isNumber:    function isNumber()   { return false },
-        isPrimitive: function isPrimitive(){ return false },
-        isString:    function isNumber(){ return false },
-        isUndefined: function isUndefined(){ return false },
-        typeOf: function typeOf(){ return 'object' },
-        classOf: function classOf(){
+        isObject:    yes,
+        isArray:     no,
+        isBoolean:   no,
+        isFunction:  no,
+        isNil:       no,
+        isNull:      no,
+        isNumber:    no,
+        isPrimitive: no,
+        isString:    no,
+        isUndefined: no,
+        typeOf:  function(){ return 'object' },
+        classOf: function(){
             return signatureOf(this).slice(8,-1)
         }
     }));
@@ -291,25 +294,25 @@
         isBuiltIn: _isBuiltIn
     }));
     defaults(Function.prototype, defSpecs({
-        isFunction:  function isFunction() { return true  },
-        isNil:       function isNil()      { return false },
-        isNull:      function isNull()     { return false },
-        isUndefined: function isUndefined(){ return false },
-        typeOf: function typeOf(){ return 'function' },
-        classOf: function classOf(){ return 'Function' },
-        isBuiltIn: function isBuiltIn() { return _isBuiltIn(this) }
+        isFunction:  yes,
+        isNil:       no,
+        isNull:      no,
+        isUndefined: no,
+        typeOf:    function(){ return 'function' },
+        classOf:   function(){ return 'Function' },
+        isBuiltIn: function(){ return _isBuiltIn(this) }
     }));
     // Boolean
     defaults(Boolean, defSpecs({
         isBoolean: isBoolean
     }));
     defaults(Boolean.prototype, defSpecs({
-        isBoolean:   function isBoolean()  { return true  },
-        isObject:    function isObject()   { return false },
-        isPrimitive: function isPrimitive(){ return true  },
-        typeOf: function typeOf(){ return 'boolean' },
-        classOf: function classOf(){ return 'Boolean' },
-        toNumber:  function toNumber(){ return 1 * this }
+        isBoolean:   yes,
+        isObject:    no,
+        isPrimitive: yes,
+        typeOf:    function(){ return 'boolean' },
+        classOf:   function(){ return 'Boolean' },
+        toNumber:  function(){ return 1 * this }
     }));
     // Number
     var _parseInt = parseInt,
@@ -337,15 +340,15 @@
     }));
     // Number.prototype
     defaults(Number.prototype, defSpecs({
-        isNumber:    function isNumber()   { return true  },
-        isObject:    function isObject()   { return false },
-        isPrimitive: function isPrimitive(){ return true  },
-        typeOf:    function typeOf(){ return 'number' },
-        classOf:   function classOf(){ return 'Number' },
-        isFinite:  function isFinite(){ return _isFinite(this) },
-        isNan:     function toNumber(){ return is(this, NaN) },
-        toBoolean: function toNumber(){ return !!this },
-        toInteger: function toNumber(){ 
+        isNumber:    yes,
+        isObject:    no,
+        isPrimitive: yes,
+        typeOf:    function(){ return 'number' },
+        classOf:   function(){ return 'Number' },
+        isFinite:  function(){ return _isFinite(this) },
+        isNan:     function(){ return is(this, NaN) },
+        toBoolean: function(){ return !!this },
+        toInteger: function(){ 
             return this.isFinite() ? this - this % 1 : this
         }
     }));
@@ -354,21 +357,16 @@
         isString: isString
     }));
     // String.prototype
-    var _escape = escape, 
-    _encodeURI = encodeURI,
-    _encodeURIComponent = encodeURIComponent,
-    _decodeURI = decodeURI,
-    _decodeURIComponent = decodeURIComponent;
     defaults(String.prototype, defSpecs({
-        isString:    function isString()   { return true  },
-        isObject:    function isObject()   { return false },
-        isPrimitive: function isPrimitive(){ return true  },
-        isUndefined: function isUndefined(){ return false },
-        typeOf:  function typeOf() { return 'string' },
-        classOf: function classOf(){ return 'String' },
-        toBoolean: function toBoolean() { return !!this },
-        toNumber:  function toNumber(b) { return parseFloat(this, b||10) },
-        toInteger: function toInteger(b){ return parseInt(this, b||10) },
+        isString:    yes,
+        isObject:    no,
+        isPrimitive: yes,
+        isUndefined: no,
+        typeOf:  function() { return 'string' },
+        classOf: function() { return 'String' },
+        toBoolean: function() { return !!this },
+        toNumber:  function(b) { return parseFloat(this, b||10) },
+        toInteger: function(b){ return parseInt(this, b||10) },
         // ES6
         // http://wiki.ecmascript.org/doku.php?id=harmony:string_extras
         repeat: function(n) {
@@ -385,15 +383,11 @@
         },
         contains: function(s) { return this.indexOf(s) !== -1 },
         // they should've been here from the 1st place
-        escape: function escape(){ return _escape(this) },
-        encodeURI: function encodeURI(){ return _encodeURI(this) },
-        encodeURIComponent: function encodeURIComponent(){ 
-            return _encodeURIComponent(this) 
-        },
-        dncodeURI: function decodeURI(){ return _decodeURI(this) },
-        dncodeURIComponent: function decodeURIComponent(){ 
-            return _decodeURIComponent(this) 
-        }
+        escape: function(){ return escape(this) },
+        encodeURI: function (){ encodeURI(this) },
+        encodeURIComponent: function (){ return encodeURIComponent(this) },
+        dncodeURI: function (){ return decodeURI(this) },
+        dncodeURIComponent: function (){ return _decodeURIComponent(this) }
     }));
     // Array
     defaults(Array, defSpecs({
