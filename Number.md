@@ -8,8 +8,8 @@ From ES6:
 + Number.EPSILON
 + Number.isFinite( *unknown* )
 + Number.isNaN( *unknown* )
-+ Number.parseInt( *string* *[, base* )
-+ Number.parseFloat( *string* *[, base]* )
++ Number.parseInt( *string* *[, base ]* )
++ Number.parseFloat( *string* *[, base ]* )
 + Number.isInteger( *unknown* )
 + Number.toInteger( *unknown* )
 
