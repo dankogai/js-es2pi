@@ -12,8 +12,12 @@ On es2pi:
 
 ### Deep Comparison and Cloning
 
+See [Object.clone] for details.
+
 + Object.equals( *objx*, *objy* *[, check]* )
 + Object.clone( *src*, *[isdeep, check]* )
+
+[Object.clone]: Object.clone.md
 
 ### Property Management
 
