@@ -53,8 +53,9 @@ On es2pi:
 ### Object as a Map
 
 + Object.has( *obj*, *prop* )
-+ Object.items( *obj* )
++ ( Object.keys( *obj* ) we already have since ES5 )
 + Object.values( *obj* )
++ Object.items( *obj* )
 
 See Also:
 ---------
