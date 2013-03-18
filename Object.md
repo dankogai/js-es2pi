@@ -26,7 +26,7 @@ See [Object.clone] for details.
 
 ### Type Checking
 
-+ Object.tyepeOf( *unknown* )
++ Object.typeOf( *unknown* )
 + Object.classOf( *unknown* )
 + Object.isArray( *unknown* )
 + Object.isBoolean( *unknown* )
