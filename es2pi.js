@@ -233,6 +233,9 @@
     // Functions that Return constant values
     function yes() { return true };
     function no() { return false };
+    // more functions
+    function identity(a){ return a };
+    function has(o, k) { return hasOwnProperty.call(o, k) };
     // Object
     defaults(Object, defSpecs({
         // crutial
@@ -250,9 +253,7 @@
         items: function items(o) {
             return keys(o).map(function(k) { return [k, o[k]] });
         },
-        has: function has(o, k) {
-            return hasOwnProperty.call(o, k);
-        },
+        has: has,
         // types
         isNull: function isNull(o) { return o === null },
         isUndefined: function isUndefined(o) { return o === void(0) },
@@ -291,7 +292,8 @@
     // Function
     defaults(Function, defSpecs({
         isFunction: isFunction,
-        isBuiltIn: _isBuiltIn
+        isBuiltIn: _isBuiltIn,
+        identity: identity
     }));
     defaults(Function.prototype, defSpecs({
         isFunction: yes,
@@ -300,7 +302,17 @@
         isUndefined: no,
         typeOf: function() { return 'function' },
         classOf: function() { return 'Function' },
-        isBuiltIn: function() { return _isBuiltIn(this) }
+        isBuiltIn: function() { return _isBuiltIn(this) },
+        memoize: function(toStr, memo) {
+            toStr = toStr || identity;
+            memo  = memo  || create(null);
+            var that = this;
+            return function() {
+                var key = toStr.apply(this, arguments);
+                if (has(memo, key)) return memo[key];
+                return memo[key] = that.apply(this, arguments);
+            };
+        }
     }));
     // Boolean
     defaults(Boolean, defSpecs({

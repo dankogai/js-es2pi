@@ -7,15 +7,42 @@ From ES6:
 On es2pi:
 ---------
 
-+ Function.isFunction( *unknown* )
+### Type Checkers
 
++ Function.isFunction( *unknown* )
 + Function.prototype.classOf()
 + Function.prototype.typeOf()
 + Function.prototype.isFunction()
 
-+ Function.isBuiltIn( *unknown* )
-+ Function.prototype.isFunction()
-+ Function.prototype.isBuiltIn()
+#### Function.isBuiltIn( *unknown* )
+#### Function.prototype.isBuiltIn();
+
+Checks if the function is built-in.  False if the function is defined
+in JavaScript.  Handy to check if the function is polyfilled.
+
+
+### Goodies
+
+#### Function.prototype.memoize( *[ toStr, memo ]* )
+
+Turns the function into a memoized version.  The resulting function
+first looks up the memo for the argument and if found, returns it.
+The original function is invoked iff the argument is not found and
+upon return the result is cached in the memo.
+
+````javascript
+ var fib = function(n){
+    return n < 2 ? n : fib(n - 1) + fib(n - 2) 
+ }.memoize();
+````
+
+cf. http://en.wikipedia.org/wiki/Memoization
+
+The optional first argument is a function that turns the argument into
+the key string.  Default is the identity function (`function(a){return a}`). 
+
+The second argument is an object used for memo.  By default it is
+automatically created as Object.create(null);
 
 See Also:
 ---------

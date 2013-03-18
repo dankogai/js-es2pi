@@ -30,3 +30,13 @@ describe('Function.prototype.isBuiltIn', function () {
     it('Object.isBuiltin()', eq(Object.isBuiltIn(), true));
     it('function(){}', eq(function(){}.isBuiltIn(), false));
 });
+
+describe('Function.prototype.memoize', function () {
+    var memo = [];
+    fib = function(n){
+        return n < 2 ? n : fib(n - 1) + fib(n - 2) 
+    }.memoize(null, memo);
+    it('fib(22)',          ok(fib(22) === 17711     && memo.length === 23));
+    it('fib(42)',          ok(fib(42) === 267914296 && memo.length === 43));
+    it('fib(22) // again', ok(fib(22) === 17711     && memo.length === 43));
+});
