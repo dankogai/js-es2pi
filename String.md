@@ -42,16 +42,21 @@ On es2pi:
 
 #### String.prototype.interpolate( *obj* *[, rx]*)
 
-Does a simple string interpolation.
+Does a simple string interpolation.  By default, the format is Rubyish:
 
-javascript````
-"#{here} #{there} #{nowhere}"
-  .interpolate({here:'koko', there:'asoko'});
+````javascript
+"#{here} #{there} #{nowhere}".interpolate({here:'koko', there:'asoko'});
 // "koko asoko undefined"
 ````
 
-You can pass the optional RegExp *rx* which defaults to
-`/#\{.+?\}/g`, resulting a ruby-like format.
+You can optionally pass the RegExp *rx* to change the format:
+
+````javascript
+"$[here] $[there] $[nowhere]".interpolate(
+  {here:'koko', there:'asoko'}, /\$\[(.+?)\]/g;
+);
+// "koko asoko undefined"
+````
 
 cf. http://javascript.crockford.com/remedial.html
 
