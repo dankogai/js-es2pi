@@ -42,7 +42,7 @@ The optional first argument is a function that turns the argument into
 the key string.  Default is the identity function (`function(a){return a}`). 
 
 The second argument is an object used for memo.  By default it is
-automatically created as Object.create(null);
+automatically created internally via `Object.create(null)`.
 
 See Also:
 ---------
