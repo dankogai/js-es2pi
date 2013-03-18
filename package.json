@@ -1,6 +1,6 @@
 {
   "name": "js-es2pi",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ES6 + a little more on top of ES5",
   "main": "es2pi.js",
   "directories": {

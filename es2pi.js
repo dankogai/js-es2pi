@@ -1,5 +1,5 @@
 /*
- * $Id: es2pi.js,v 0.1 2013/03/18 06:36:50 dankogai Exp dankogai $
+ * $Id: es2pi.js,v 0.2 2013/03/18 13:10:40 dankogai Exp dankogai $
  *
  *  (c) 2013 Dan Kogai
  *
