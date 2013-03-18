@@ -1,8 +1,12 @@
-
 Object.clone
 ============
 
 Deep cloning and comparison for ES5
+
+Ported From:
+------------
+
+https://github.com/dankogai/js-object-clone
 
 SYNOPSIS
 --------
