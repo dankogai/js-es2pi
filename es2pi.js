@@ -270,13 +270,16 @@
     }));
     // Object.prototype // yes, we can!
     defaults(Object.prototype, defSpecs({
+        isArray:     function isAray()     { return false },
+        isBoolean:   function isBoolean()  { return false },
+        isFunction:  function isFunction() { return false },
+        isNil:       function isNil()      { return false },
+        isNull:      function isNull()     { return false },
+        isNumber:    function isNumber()   { return false },
+        isObject:    function isObject()   { return true  },
         isPrimitive: function isPrimitive(){ return false },
-        isBoolean: function isBoolean(){ return false },
-        isNumber: function isNumber(){ return false },
-        isString: function isNumber(){ return false },
-        isArray: function isAray(){ return false },
-        isFunction: function isFunction(){ return false },
-        isObject: function isObject(){ return true },
+        isString:    function isNumber(){ return false },
+        isUndefined: function isUndefined(){ return false },
         typeOf: function typeOf(){ return 'object' },
         classOf: function classOf(){
             return signatureOf(this).slice(8,-1)
@@ -288,8 +291,12 @@
         isBuiltIn: _isBuiltIn
     }));
     defaults(Function.prototype, defSpecs({
-        isFunction: function isFunction(){ return true },
-        isObject: function isObject(){ return false },
+        isFunction:  function isFunction() { return true  },
+        isNil:       function isNil()      { return false },
+        isNull:      function isNull()     { return false },
+        isObject:    function isObject()   { return false },
+        isPrimitive: function isPrimitive(){ return false },
+        isUndefined: function isUndefined(){ return false },
         typeOf: function typeOf(){ return 'function' },
         classOf: function classOf(){ return 'Function' },
         isBuiltIn: function isBuiltIn() { return _isBuiltIn(this) }
@@ -299,8 +306,12 @@
         isBoolean: isBoolean
     }));
     defaults(Boolean.prototype, defSpecs({
-        isBoolean: function isBoolean(){ return true },
-        isObject: function isObject(){ return false },
+        isBoolean:   function isBoolean()  { return true  },
+        isNil:       function isNil()      { return false },
+        isNull:      function isNull()     { return false },
+        isObject:    function isObject()   { return false },
+        isPrimitive: function isPrimitive(){ return true  },
+        isUndefined: function isUndefined(){ return false },
         typeOf: function typeOf(){ return 'boolean' },
         classOf: function classOf(){ return 'Boolean' },
         toNumber:  function toNumber(){ return 1 * this }
@@ -331,12 +342,16 @@
     }));
     // Number.prototype
     defaults(Number.prototype, defSpecs({
+        isNil:       function isNil()      { return false },
+        isNull:      function isNull()     { return false },
+        isNumber:    function isNumber()   { return true  },
+        isObject:    function isObject()   { return false },
+        isPrimitive: function isPrimitive(){ return true  },
+        isUndefined: function isUndefined(){ return false },
+        typeOf:    function typeOf(){ return 'number' },
+        classOf:   function classOf(){ return 'Number' },
         isFinite:  function isFinite(){ return _isFinite(this) },
         isNan:     function toNumber(){ return is(this, NaN) },
-        isNumber:  function isNumber(){ return true },
-        isObject: function isObject(){ return false },
-        typeOf: function typeOf(){ return 'number' },
-        classOf: function classOf(){ return 'Number' },
         toBoolean: function toNumber(){ return !!this },
         toInteger: function toNumber(){ 
             return this.isFinite() ? this - this % 1 : this
@@ -353,9 +368,13 @@
     _decodeURI = decodeURI,
     _decodeURIComponent = decodeURIComponent;
     defaults(String.prototype, defSpecs({
-        isString:  function isString()  { return true },
-        isObject: function isObject(){ return false },
-        typeOf: function typeOf(){ return 'string' },
+        isNil:       function isNil()      { return false },
+        isNull:      function isNull()     { return false },
+        isObject:    function isObject()   { return false },
+        isPrimitive: function isPrimitive(){ return true  },
+        isString:    function isString()   { return true  },
+        isUndefined: function isUndefined(){ return false },
+        typeOf:  function typeOf() { return 'string' },
         classOf: function classOf(){ return 'String' },
         toBoolean: function toBoolean() { return !!this },
         toNumber:  function toNumber(b) { return parseFloat(this, b||10) },
@@ -398,8 +417,12 @@
     }));
     // Array.prototype
     defaults(Array.prototype, defSpecs({
-        isArray: function isArray(){ return true },
-        isObject: function isObject(){ return false },
+        isArray:     function isArray()    { return true  },
+        isNil:       function isNil()      { return false },
+        isNull:      function isNull()     { return false },
+        isObject:    function isObject()   { return false },
+        isPrimitive: function isPrimitive(){ return false },
+        isUndefined: function isUndefined(){ return false },
         // typeOf: function typeOf(){ return 'array' },
         classOf: function classOf(){ return 'Array' },
         repeat: function(n) {
