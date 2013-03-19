@@ -125,7 +125,7 @@
             if (isFunction(x)) return is(x, y);
             // check deeply
             var sx = signatureOf(x), sy = signatureOf(y);
-            var i, l, px, py, sx, sy, kx, ky, dx, dy, dk;
+            var i, l, px, py, sx, sy, kx, ky, dx, dy, dk, flt;
             if (sx !== sy) return false;
             switch (sx) {
             case '[object Array]':
@@ -145,15 +145,22 @@
                 }
                 px = ck.enumerator(x);
                 py = ck.enumerator(y);
+                if (ck.filter) {
+                    flt = function(k, i, o) {
+                        var d = getOwnPropertyDescriptor(this, k);
+                        return ck.filter(d, k, this);
+                    };
+                    px = px.filter(flt, x);
+                    py = py.filter(flt, y);
+                }
                 if (px.length != py.length) return false;
                 px.sort(); py.sort();
-                iter: for (i = 0, l = px.length; i < l; ++i) {
+                for (i = 0, l = px.length; i < l; ++i) {
                     kx = px[i];
                     ky = py[i];
                     if (kx !== ky) return false;
                     dx = getOwnPropertyDescriptor(x, ky);
                     dy = getOwnPropertyDescriptor(y, ky);
-                    if (ck.filter && !ck.filter(dx, kx, x)) continue iter;
                     if ('value' in dx) {
                         if (!_equals(dx.value, dy.value)) return false;
                     } else {

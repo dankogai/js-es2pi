@@ -8,12 +8,11 @@ if (this['window'] !== this) {
 }
 
 (function(root){
-
-describe('Boolean.prototype', function () {
-    it('false.isBoolean()', eq(false.isBoolean(), true));
-    it('true.isBoolean()',  eq(true.isBoolean(),  true));
-    it('false.toNumber()',  eq(false.toNumber(), 0));
-    it('true.toNumber()',   eq(true.toNumber(),  1));
-});
-
+    'use strict';
+    describe('Boolean.prototype', function () {
+        it('false.isBoolean()', eq(false.isBoolean(), true));
+        it('true.isBoolean()',  eq(true.isBoolean(),  true));
+        it('false.toNumber()',  eq(false.toNumber(), 0));
+        it('true.toNumber()',   eq(true.toNumber(),  1));
+    });
 })(this);
