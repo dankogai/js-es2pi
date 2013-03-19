@@ -45,15 +45,15 @@ Table of Contents
 + [String]
  
 
-[Array]:        Array.md
-[Boolean]:      Boolean.md
-[Function]:     Function.md
-[Map]:          Map.md
-[Math]:         Math.md
-[Number]:       Number.md
-[Object]:       Object.md
-[Set]:          Set.md
-[String]:       String.md
+[Array]:        doc/Array.md
+[Boolean]:      doc/Boolean.md
+[Function]:     doc/Function.md
+[Map]:          doc/Map.md
+[Math]:         doc/Math.md
+[Number]:       doc/Number.md
+[Object]:       doc/Object.md
+[Set]:          doc/Set.md
+[String]:       doc/String.md
 
 See Also
 --------

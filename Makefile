@@ -1,6 +1,8 @@
-MINI = es2pi.min.js
+SOURCE = es2pi.js
+TARGET = es2pi.min.js
 
 all: mini
 
-mini: $(MINI)
-	uglifyjs es2pi.js > es2pi.min.js
+mini: $(SOURCE)
+	uglifyjs $(SOURCE) > $(TARGET)
+
