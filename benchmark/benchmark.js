@@ -15,14 +15,15 @@ if (this['window'] !== this) {
     };
     var timethese = function(c, o) {
         console.log(c + ' times');
-        console.log('-'.repeat(16));
+        console.log('-'.repeat(32));
         Object.keys(o).forEach(function(k) {
-            console.log(k + ':\t', timeit(c, o[k]));
+            console.log(k + '; //\t', timeit(c, o[k]));
         });
-        console.log('='.repeat(16));
+        console.log('='.repeat(32));
     }
-    console.log('Object.is.isBuiltIn(); // ', Object.is.isBuiltIn());
+    console.log('Object.is.isBuiltIn(); // ',     Object.is.isBuiltIn());
     console.log('Object.equals.isBuiltIn(); // ', Object.equals.isBuiltIn());
+    console.log('Object.typeOf.isBuiltIn(); // ', Object.typeOf.isBuiltIn());
     timethese(100e3, {
         'Object.is({}, {})': function(){ Object.is({}, {}) },
         'Object.equals({}, {})': function(){ Object.equals({}, {}) },
@@ -33,18 +34,22 @@ if (this['window'] !== this) {
         'true.typeOf()':              function(){ true.typeOf()  },
         'typeof true  === "boolean"': function(){ typeof true === "boolean" },
         'true.isBoolean()':           function(){ true.isBoolean()  },
+        'Object.isBoolean(true)':     function(){ Object.isBoolean(true) },
         'typeof 0':                   function(){ typeof 0 },
-        '(0).typeOf()':               function(){ (0).typeOf()  },
+        '(0).typeOf()':               function(){ (0).typeOf() },
         'typeof 0  === "number"':     function(){ typeof 0 === "number" },
-        '(0).isNumber()':             function(){ (0).isNumber()  },
+        '(0).isNumber()':             function(){ (0).isNumber() },
+        'Object.isNumber(0)':         function(){ Object.isNumber(0) },
         'typeof ""':                  function(){ typeof "" },
         '"".typeOf()':                function(){ "".typeOf() },
         'typeof "" === "string"':     function(){ typeof "" === "string" },
-        '"".isString()':              function(){ (0).isString()  },
+        '"".isString()':              function(){ "".isString() },
+        'Object.isString("")':        function(){ Object.isString("") },
         'typeof []':                  function(){ typeof [] },
         '[].typeOf()':                function(){ [].typeOf() },
         'typeof [] === "object"':     function(){ typeof [] === "object" },
-        '"".isObject()':              function(){ (0).isObject()  }
+        '[].isObject()':              function(){ [].isObject() },
+        'Object.isObject([])':        function(){ Object.isObject([]) }
     });
     var a = [], o = {};
     timethese(10e6, {
