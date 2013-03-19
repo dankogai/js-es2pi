@@ -25,25 +25,32 @@ Added because I felt it is unfair and consistent when
 
 #### Array.prototype.sorted( *[ comp ]* )
 
-And `Array.`*fun* for corresponding `Array.`prototype.*fun* like Firefox
+#### Array. *fun* for each Array.prototype. *fun*
+
+And `Array`. *fun* for corresponding `Array.prototype`. *fun* like Firefox
 like `Array.sort`
 
+### Type Checking
 
 + Array.prototype.isArray()
 + Array.prototype.typeOf()
 + Array.prototype.classOf()
 
-#### Comparison
+### Comparison and Deep Cloning
 
 + Array.prototype.is( *that* )
 + Array.prototype.isnt( *that* )
 + Array.prototype.equals( *that*, *check* )
++ Array.prototype.clone( *deep*, *check* )
+
 
 ````javascript
 var a = [42];
-a.is(a);        // true;
-a.is([42]);     // false;
-a.equals([42]); // true;
+a.is(a);
+a.isnt([42]);   // by reference
+a.equals([42]); // by value
+[42,'Life Universe Everything'.split(' ')].clone(true)
+  .equals([42,["Life","Universe","Everything"]]);
 ````
 
 See Also:
