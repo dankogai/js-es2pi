@@ -52,7 +52,6 @@ describe('Type Checkers', function() {
             if (k === 'isObject') return;
             pred = k === k2;
             var expr = cls + '.' + k + '(' + asStr(isType[k2]) + ')';
-            //console.log(expr + ' === ' + pred);
             it(expr + ' === ' + pred, eq(eval(expr), pred));
         });
     });

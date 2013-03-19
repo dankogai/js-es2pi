@@ -256,6 +256,8 @@
     function isntThis(that) { return this !== that };
     function isntReally(that) { return isnt(this, that) };
     function equalsThis(that, check) { return equals(this, that, check) };
+    function cloneThis(deep, check){ return clone(this, deep, check) };
+    function itself(){ return this };
     // Object
     defaults(Object, defSpecs({
         // crutial
@@ -316,7 +318,8 @@
         },
         is: isThis,
         isnt: isntThis,
-        equals: equalsThis
+        equals: equalsThis,
+        clone: cloneThis,
     }));
     // Function
     defaults(Function, defSpecs({
@@ -335,7 +338,10 @@
         isUndefined: no,
         typeOf: function() { return 'function' },
         classOf: function() { return 'Function' },
+        is: isThis,
+        isnt: isntThis,
         equals: isThis,
+        clone: itself,
         isBuiltIn: function() { return _isBuiltIn(this) },
         memoize: function(toStr, memo) {
             toStr = toStr || identity;
@@ -359,6 +365,7 @@
         is: isThis,
         isnt: isntThis,
         equals: isThis,
+        clone: itself,
         typeOf: function() { return 'boolean' },
         classOf: function() { return 'Boolean' },
         toNumber: function() { return 1 * this }
@@ -399,7 +406,8 @@
         },
         is: isReally,
         isnt: isntReally,
-        equals: isReally
+        equals: isReally,
+        clone: itself,
     }));
     // String
     defaults(String, defSpecs({
@@ -414,6 +422,7 @@
         is: isThis,
         isnt: isntThis,
         equals: isThis,
+        clone: itself,
         typeOf: function() { return 'string' },
         classOf: function() { return 'String' },
         toBoolean: function() { return !!this },

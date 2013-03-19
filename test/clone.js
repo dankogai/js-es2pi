@@ -215,8 +215,44 @@ if (this['window'] !== this) {
         };
         src = Point(3,4);
         dst = Object.clone(src, true);
-        it ('Object.clone() // custom object', ok(Object.isnt(src, dst)));
-        it ('Object.clone() // custom object', eq(dst.distance(Point(0,0)), 5));
+        it ('Object.clone() // custom obj', ok(Object.isnt(src, dst)));
+        it ('Object.clone() // custom obj', eq(dst.distance(Point(0,0)), 5));
     });
+
+
+Function.prototype.toJSON = function(){ return '(' + this + ')' };
+Date.prototype.toJSON = function(){ return '(new Date(' + this*1 + '))' };
+RegExp.prototype.toJSON = function(){ return ''+this };
+
+var asStr = function(o){ 
+    if (o === null || o === void(0)) return '' + o;
+    var jstr = JSON.stringify(o);
+    return typeof o !== 'string' 
+        ? jstr.replace(/^\"/,'').replace(/\"$/,'') : jstr;
+};
+
+describe('Prototypal', function() {
+    var thingies = [false, 0, '', function(){}, [], {}, new Date(0), /(?:)/];
+    thingies.forEach(function(v0) {
+        thingies.forEach(function(v1) {
+            it(asStr(v0)+'.is('+asStr(v1)+'); // '+ Object.is(v0,v1), 
+               eq(v0.is(v1),                       Object.is(v0, v1)));
+            it(asStr(v0)+'.isnt('+asStr(v1)+'); // ' + Object.isnt(v0,v1), 
+               eq(v0.isnt(v1),                         Object.isnt(v0,v1)));
+            it(asStr(v0)+'.equals('+asStr(v1)+') // ' + Object.equals(v0,v1), 
+               eq(v0.equals(v1),                        Object.equals(v0,v1)));
+        });
+    });
+    [false, 0, '', function(){}].forEach(function(v) {
+        it(asStr(v) + '.clone(true).is(' + asStr(v) +');',
+           eq(v.clone().is(v), true));
+    });
+    [[], {}, new Date(0), /(?:)/].forEach(function(v) {
+        it(asStr(v) + '.clone(true).isnt(' + asStr(v) +');',
+           eq(v.clone(true).isnt(v), true));
+        it(asStr(v) + '.clone(true).equals(' + asStr(v) +');',
+           eq(v.clone(true).equals(v), true));
+    });
+});
 
 })(this);
