@@ -153,7 +153,7 @@
                     px = px.filter(flt, x);
                     py = py.filter(flt, y);
                 }
-                if (px.length != py.length) return false;
+                if (px.length !== py.length) return false;
                 px.sort(); py.sort();
                 for (i = 0, l = px.length; i < l; ++i) {
                     kx = px[i];
