@@ -38,7 +38,7 @@ if (this['window'] !== this) {
         it('Object.isBuiltin()', eq(Object.isBuiltIn(), true));
         it('function(){}', eq(function(){}.isBuiltIn(), false));
     });
-
+    
     describe('Function.prototype.memoize', function () {
         var memo = [];
         var fib = function(n){
