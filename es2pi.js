@@ -94,8 +94,8 @@
         ['Boolean', 'Number', 'String', 'Function'],
         ['Arguments', 'Date', 'RegExp']
     );
-    var _typeOf = function(o) { return o === null ? 'null' : typeof(o) };
-    var signatureOf = function(o) { return toString.call(o) };
+    function typeOf(o) { return o === null ? 'null' : typeof(o) };
+    function classOf(o) { return toString.call(o).slice(8, -1) };
     var is = Object.is || function is(x, y) {
         return x === y
             ? x !== 0 ? true
@@ -128,7 +128,7 @@
             if (isPrimitive(x)) return is(x, y);
             if (isFunction(x)) return is(x, y);
             // check deeply
-            var sx = signatureOf(x), sy = signatureOf(y);
+            var sx = toString.call(x), sy = toString.call(y);
             var i, l, px, py, sx, sy, kx, ky, dx, dy, dk, flt;
             if (sx !== sy) return false;
             switch (sx) {
@@ -203,7 +203,7 @@
             // primitives and functions
             if (isPrimitive(src)) return src;
             if (isFunction(src)) return src;
-            var sig = signatureOf(src);
+            var sig = toString.call(src);
             switch (sig) {
             case '[object Array]':
             case '[object Object]':
@@ -255,6 +255,7 @@
     // more functions
     function identity(a) { return a };
     function has(o, k) { return hasOwnProperty.call(o, k) };
+    // and methods
     function isThis(that) { return this === that };
     function isReally(that) { return is(this, that) };
     function isntThis(that) { return this !== that };
@@ -262,6 +263,7 @@
     function equalsThis(that, check) { return equals(this, that, check) };
     function cloneThis(deep, check) { return clone(this, deep, check) };
     function itself() { return this };
+    function classOfThis() { return classOf(this) };
     // Object
     defaults(Object, defSpecs({
         // crutial
@@ -294,12 +296,8 @@
         isArray: isArray,
         isFunction: isType.Function,
         isObject: isObject,
-        typeOf: function typeOf(o) {
-            return _typeOf(arguments.length < 1 ? this : o);
-        },
-        classOf: function classOf(o) {
-            return signatureOf(o).slice(8, -1);
-        }
+        typeOf: typeOf,
+        classOf: classOf,
     }));
     // Object.prototype // yes, we can!
     defaults(Object.prototype, defSpecs({
@@ -317,9 +315,7 @@
         isRegExp: no,
         isArguments: no,
         typeOf: function() { return 'object' },
-        classOf: function() {
-            return signatureOf(this).slice(8, -1);
-        },
+        classOf: classOfThis,
         is: isThis,
         isnt: isntThis,
         equals: equalsThis,
@@ -670,7 +666,7 @@
         };
         defaults(_Map.prototype, defSpecs({
             has: function(k) {
-                var t = _typeOf(k),
+                var t = typeOf(k),
                 s;
                 if (isPrimitive(k)) {
                     s = val2str(t, k);
@@ -679,7 +675,7 @@
                 return indexOfIdentical(this.__keys, k) >= 0;
             },
             get: function(k) {
-                var t = _typeOf(k),
+                var t = typeOf(k),
                 i;
                 if (isPrimitive(k)) {
                     return this.__hash[val2str(t, k)];
@@ -689,7 +685,7 @@
                 }
             },
             set: function(k, v) {
-                var t = _typeOf(k),
+                var t = typeOf(k),
                 i, s;
                 if (isPrimitive(k)) {
                     s = val2str(t, k);
@@ -708,7 +704,7 @@
                 }
             },
             'delete': function(k) {
-                var t = _typeOf(k),
+                var t = typeOf(k),
                 i, s;
                 if (isPrimitive(k)) {
                     s = val2str(t, k);

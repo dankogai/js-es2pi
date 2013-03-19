@@ -14,13 +14,21 @@ if (this['window'] !== this) {
         return Date.now() - started;
     };
     var timethese = function(c, o) {
-        console.log(c + ' times');
-        console.log('-'.repeat(32));
+        console.log('[n = ' + c + ']');
+        console.log('='.repeat(64));
         Object.keys(o).forEach(function(k) {
             console.log(k + '; //\t', timeit(c, o[k]));
         });
-        console.log('='.repeat(32));
-    }
+        console.log('='.repeat(64));
+    };
+    // just for this benchmark
+    [Boolean, Number, String, Function, Array, Object]
+        .forEach(function(cls){
+            var type = cls.name.toLowerCase();
+            Object.defineProperty(cls.prototype, 'type', {value:type});
+        });
+    console.log('"".type; // ', "".type);
+    // let the show begin
     console.log('Object.is.isBuiltIn(); // ',     Object.is.isBuiltIn());
     console.log('Object.equals.isBuiltIn(); // ', Object.equals.isBuiltIn());
     console.log('Object.typeOf.isBuiltIn(); // ', Object.typeOf.isBuiltIn());
@@ -31,8 +39,9 @@ if (this['window'] !== this) {
     });
     timethese(10e6, {
         'typeof true  === "boolean"': function(){ typeof true === "boolean" },
-        'Object.isBoolean()':         function(){ true.isBoolean() },
+        'Object.isBoolean(true)':     function(){ Object.isBoolean(true) },
         'true.typeOf()':              function(){ true.typeOf()  },
+        'true.type':                  function(){ true.typeOf()  },
         'true.classOf()':             function(){ true.classOf() },
         'Object.classOf(true)':       function(){ Object.classOf(true) }
     });
@@ -41,6 +50,7 @@ if (this['window'] !== this) {
         '[].isObject()':              function(){ [].isObject() },
         'Object.isObject([])':        function(){ Object.isObject([]) },
         '[].typeOf()':                function(){ [].typeOf() },
+        '[].type':                    function(){ [].type },
         'Object.classOf([])':         function(){ Object.classOf([]) },
         '[].classOf()':               function(){ [].classOf() },
         'Array.isArray([])':          function(){ Array.isArray([]) },
@@ -49,7 +59,8 @@ if (this['window'] !== this) {
     timethese(10e6, {
         'Object.classOf(/(?:)/)':     function(){ Object.classOf(/(?:)/) },
         '/(?:)/.classOf()':           function(){ /(?:)/.classOf() },
-        '/(?:)/.isRegExp()':          function(){ /(?:)/.isRegExp() }
+        '/(?:)/.isRegExp()':          function(){ /(?:)/.isRegExp() },
+        'toString.call(/(?:)/)': function(){ toString.call(/(?:)/) }
     });
     var a = [], o = {};
     timethese(10e6, {
@@ -69,5 +80,3 @@ if (this['window'] !== this) {
         '({}).is({})':           function(){ ({}).is({}) },
     });
 })(this);
-
-
