@@ -7,6 +7,8 @@ if (this['window'] !== this) {
     require('../es2pi.js');
 }
 
+(function(root){
+
 describe('String.prototype.repeat', function () {
     it('"string".repeat(0)', eq("string".repeat(0), ''));
     it('"".repeat(100)',     eq("".repeat(100), ''));
@@ -43,3 +45,5 @@ describe('String.prototype.interpolate', function() {
     r = /\$\[(.+?)\]/g;
     it(t + ", "+ r, eq(t.interpolate(o, r), 'koko asoko undefined'));
 });
+
+})(this);

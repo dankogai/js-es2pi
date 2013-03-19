@@ -7,6 +7,8 @@ if (this['window'] !== this) {
     require('../es2pi.js');
 }
 
+(function(root){
+
 describe('Array', function() {
    it ('Array.of()', eq_deeply(Array.of(), []));
    it ('Array.of(42)', eq_deeply(Array.of(42), [42]));
@@ -32,3 +34,5 @@ describe('Array.prototype.sorted', function () {
    it('a.sorted(cmp)', eq_deeply(a.sorted(cmp), [1,3,7,15,31,63,127,255]));
    it('a remains unchanged', eq_deeply(a, [7,63,127,31,1,3,15,255]));
 });
+
+})(this);

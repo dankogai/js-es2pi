@@ -7,6 +7,8 @@ if (this['window'] !== this) {
     require('../es2pi.js');
 }
 
+(function(root){
+
 describe('Object', function () {
     var specA = Object.getOwnPropertyDescriptor(Object, 'freeze'),
     specB = Object.getOwnPropertyDescriptor(Object, 'extend');
@@ -45,3 +47,5 @@ describe('Object', function () {
                      'hasOwnProperty'), 
           false));
 });
+
+})(this);

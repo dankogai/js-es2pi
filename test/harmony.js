@@ -8,6 +8,9 @@ if (this['window'] !== this) {
     require('./helper.js');
     require('../es2pi.js');
 }
+
+(function(root){
+
 var HASWEAKMAP = (function() { // paranoia check
     try {
         var wm = WeakMap();
@@ -62,3 +65,5 @@ if (!HASWEAKMAP) {
            ok(Object.isnt(mom, kid)));
     })
 }
+
+})(this);

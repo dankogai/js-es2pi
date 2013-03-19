@@ -92,13 +92,13 @@
     ]);
     var _typeOf = function(o) { return o === null ? 'null' : typeof(o) };
     var signatureOf = function(o) { return toString.call(o) };
-    function is(x, y) {
+    var is = Object.is || function is(x, y) {
         return x === y
             ? x !== 0 ? true
             : (1 / x === 1 / y) // +-0
         : (x !== x && y !== y); // NaN
     };
-    function isnt(x, y) { return !is(x, y) };
+    var isnt = Object.isnt || function isnt(x, y) { return !is(x, y) };
     var defaultCK = {
         descriptors: true,
         extensibility: true,
@@ -242,8 +242,13 @@
     function yes() { return true };
     function no() { return false };
     // more functions
-    function identity(a){ return a };
+    function identity(a) { return a };
     function has(o, k) { return hasOwnProperty.call(o, k) };
+    function isThis(that) { return this === that };
+    function isReally(that) { return is(this, that) };
+    function isntThis(that) { return this !== that };
+    function isntReally(that) { return isnt(this, that) };
+    function equalsThis(that, check) { return equals(this, that, check) };
     // Object
     defaults(Object, defSpecs({
         // crutial
@@ -301,7 +306,10 @@
         typeOf: function() { return 'object' },
         classOf: function() {
             return signatureOf(this).slice(8, -1);
-        }
+        },
+        is: isThis,
+        isnt: isntThis,
+        equals: equalsThis
     }));
     // Function
     defaults(Function, defSpecs({
@@ -320,6 +328,7 @@
         isUndefined: no,
         typeOf: function() { return 'function' },
         classOf: function() { return 'Function' },
+        equals: isThis,
         isBuiltIn: function() { return _isBuiltIn(this) },
         memoize: function(toStr, memo) {
             toStr = toStr || identity;
@@ -340,6 +349,9 @@
         isBoolean: yes,
         isObject: no,
         isPrimitive: yes,
+        is: isThis,
+        isnt: isntThis,
+        equals: isThis,
         typeOf: function() { return 'boolean' },
         classOf: function() { return 'Boolean' },
         toNumber: function() { return 1 * this }
@@ -377,7 +389,10 @@
         toBoolean: function() { return !!this },
         toInteger: function() {
             return this.isFinite() ? this - this % 1 : this;
-        }
+        },
+        is: isReally,
+        isnt: isntReally,
+        equals: isReally
     }));
     // String
     defaults(String, defSpecs({
@@ -389,6 +404,9 @@
         isObject: no,
         isPrimitive: yes,
         isUndefined: no,
+        is: isThis,
+        isnt: isntThis,
+        equals: isThis,
         typeOf: function() { return 'string' },
         classOf: function() { return 'String' },
         toBoolean: function() { return !!this },

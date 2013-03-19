@@ -7,6 +7,8 @@ if (this['window'] !== this) {
     require('../es2pi.js');
 }
 
+(function(root){
+
 describe('Number constants', function() {
     it('Number.MAX_INTEGER', eq(Number.MAX_INTEGER, 9007199254740992));
     it('Number.EPSILON',     eq(Number.EPSILON, 2.220446049250313e-16));
@@ -36,18 +38,18 @@ describe('Number.isFinite()', function() {
         it('Number.isFinite('+v+')', eq(Number.isFinite(v), true));
         it('('+v+').isFinite()', eq(v.isFinite(), true));
     });
-    nonNumbers.forEach(function(v){
-        it('Number.isFinite('+v+')', eq(Number.isFinite(v), false));
-    });
-    valuesOf.forEach(function(v){
-        it('Number.isFinite('+v+')', eq(Number.isFinite(v), false));
-    });
     infinities.forEach(function(v){
         it('Number.isFinite('+v+')', eq(Number.isFinite(v), false));
         it('('+v+').isFinite()', eq(v.isFinite(), false));
     });
     it('Number.isFinite('+NaN+')', eq(Number.isFinite(NaN), false));
     it('('+NaN+').isFinite', eq((0/0).isFinite(), false));
+    nonNumbers.forEach(function(v){
+        it('Number.isFinite('+v+')', eq(Number.isFinite(v), false));
+    });
+    valuesOf.forEach(function(v){
+        it('Number.isFinite('+v+')', eq(Number.isFinite(v), false));
+    });
 });
 
 describe('Number.isNaN()', function() {
@@ -57,15 +59,15 @@ describe('Number.isNaN()', function() {
         it('Number.isNaN('+v+')', eq(Number.isNaN(v), false));
         it('('+v+').isNaN()', eq(v.isNaN(), false));
     });
+    infinities.forEach(function(v){
+        it('Number.isNaN('+v+')', eq(Number.isNaN(v), false));
+        it('('+v+').isNaN()', eq(v.isNaN(), false));
+    });
     nonNumbers.forEach(function(v){
         it('Number.isNaN('+v+')', eq(Number.isNaN(v), false));
     });
     valuesOf.forEach(function(v){
         it('Number.isNaN('+v+')', eq(Number.isNaN(v), false));
-    });
-    infinities.forEach(function(v){
-        it('Number.isNaN('+v+')', eq(Number.isNaN(v), false));
-        it('('+v+').isNaN()', eq(v.isNaN(), false));
     });
 });
 
@@ -87,3 +89,5 @@ describe('Number.toInteger()', function() {
         it('Number.toInteger('+v+')', eq(Number.toInteger(v), answers[i]));
     };
 });
+
+})(this);

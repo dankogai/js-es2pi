@@ -7,6 +7,8 @@ if (this['window'] !== this) {
     require('../es2pi.js');
 }
 
+(function(root){
+
 Function.prototype.toJSON = function(){ return '(' + this + ')' };
 Date.prototype.toJSON = function(){ return '(new Date(' + this*1 + '))' };
 RegExp.prototype.toJSON = function(){ return ''+this };
@@ -78,3 +80,5 @@ describe('Type Checkers', function() {
         });
     });
 });
+
+})(this);

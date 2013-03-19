@@ -7,6 +7,9 @@ if (this['window'] !== this) {
     var ns = require('../es2pi.js');
     Map = ns.Map;
 }
+
+(function(root){
+
 var equals = Object.equals;
 var truthy = [
     true, 'true', 1, '1', Math.E, Math.PI,
@@ -136,3 +139,5 @@ describe('Map objects', function () {
     m.clear();
     it('m.clear', eq(m.size, 0));
 });
+
+})(this);
