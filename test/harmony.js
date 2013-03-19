@@ -30,7 +30,7 @@ if (!HASWEAKMAP) {
         it(err, ok(err));
     })
 } else {
-     describe('Object.equals() w/ circular reference', function () {  
+    describe('Object.equals() w/ circular reference', function () {  
         var a = [], b = [];
         a.push(a); 
         it ('Object.equals(a, b) == false', eq(Object.equals(a,b), false));
@@ -48,6 +48,11 @@ if (!HASWEAKMAP) {
         it('Object.isnt(mom,kid)   // mom[0] = mom',  
            ok(Object.isnt(mom, kid)));
         it('Object.equals(mom,kid) // mom[0] = mom', 
+           ok(Object.isnt(mom, kid)));
+        mom = []; kid = []; mom.push(kid); kid.push(mom);
+        it('Object.isnt(mom,kid)   // mom[0] = kid, kid[0] = mom',
+           ok(Object.isnt(mom, kid)));
+        it('Object.equals(mom,kid) // mom[0] = kid, kid[0] = mom', 
            ok(Object.isnt(mom, kid)));
         mom = Map();
         mom.set(mom, mom);

@@ -8,7 +8,8 @@ if (this['window'] !== this) {
 }
 
 describe('Function.isBuiltIn', function () {
-    var f = function(){};
+    var f = function(){},
+    so = ''+f;
     it('Function.isBuiltIn(Object)', 
        eq(Function.isBuiltIn(Object), true));
     it('Function.isBuiltIn(Function)', 
@@ -22,7 +23,11 @@ describe('Function.isBuiltIn', function () {
     })(Function.prototype.toString.call(Function));
     it('Function.isBuiltIn(function(){}) // fake .toString', ok(
         ('' + f) === Function.prototype.toString.call(Function)
-            && Function.isBuiltIn(f) == false
+            && Function.isBuiltIn(f) === false
+    ));
+    it('Function.toString(function(){}) // fake .toString', ok(
+        ('' + f) === Function.prototype.toString.call(Function)
+            && Function.toString(f) === so
     ));
 });
 

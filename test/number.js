@@ -34,6 +34,7 @@ var valuesOf   = [
 describe('Number.isFinite()', function() {
     integers.forEach(function(v){
         it('Number.isFinite('+v+')', eq(Number.isFinite(v), true));
+        it('('+v+').isFinite()', eq(v.isFinite(), true));
     });
     nonNumbers.forEach(function(v){
         it('Number.isFinite('+v+')', eq(Number.isFinite(v), false));
@@ -43,14 +44,18 @@ describe('Number.isFinite()', function() {
     });
     infinities.forEach(function(v){
         it('Number.isFinite('+v+')', eq(Number.isFinite(v), false));
+        it('('+v+').isFinite()', eq(v.isFinite(), false));
     });
     it('Number.isFinite('+NaN+')', eq(Number.isFinite(NaN), false));
+    it('('+NaN+').isFinite', eq((0/0).isFinite(), false));
 });
 
 describe('Number.isNaN()', function() {
     it('Number.isNaN('+NaN+')', eq(Number.isNaN(NaN), true));
+    it('('+NaN+').isNaN()', eq((0/0).isNaN(), true));
     integers.forEach(function(v){
         it('Number.isNaN('+v+')', eq(Number.isNaN(v), false));
+        it('('+v+').isNaN()', eq(v.isNaN(), false));
     });
     nonNumbers.forEach(function(v){
         it('Number.isNaN('+v+')', eq(Number.isNaN(v), false));
@@ -60,6 +65,7 @@ describe('Number.isNaN()', function() {
     });
     infinities.forEach(function(v){
         it('Number.isNaN('+v+')', eq(Number.isNaN(v), false));
+        it('('+v+').isNaN()', eq(v.isNaN(), false));
     });
 });
 

@@ -15,7 +15,7 @@
     var functionToString = Function.prototype.toString;
     function isFunction(f)  { return typeof(f) === 'function' };
     var _isBuiltIn = function(f) {
-        if (!f) f = Function;
+        if (arguments.length < 1) return true; // Function.isBuiltin()
         if (!isFunction(f)) return false;
         try {
             var body = functionToString.call(f).replace(/^[^{]+/, '');
@@ -79,9 +79,17 @@
     };
     function isObject(o)    { return o === Object(o) };
     function isPrimitive(o) { return o !== Object(o) };
-    function isBoolean(o)   { return typeof(o) == 'boolean'};
-    function isNumber(o)    { return typeof(o) == 'number' };
-    function isString(o)    { return typeof(o) == 'string' };
+    var isType = (function(types){
+        var result = {};
+        types.forEach(function(t){
+            var sig = '[object ' + t + ']';
+            result[t] = function(o) { return toString.call(o) === sig };
+        });
+        return result;
+    })([
+        'Boolean', 'Number', 'String', 'Function',
+        'Arguments', 'Date', 'RegExp'
+    ]);
     var _typeOf = function(o) { return o === null ? 'null' : typeof(o) };
     var signatureOf = function(o) { return toString.call(o) };
     function is(x, y) {
@@ -259,11 +267,14 @@
         isUndefined: function isUndefined(o) { return o === void(0) },
         isNil: function isNil(o) { return o === void(0) || o === null },
         isPrimitive: isPrimitive,
-        isBoolean: isBoolean,
-        isNumber: isNumber,
-        isString: isString,
+        isBoolean: isType.Boolean,
+        isNumber:  isType.Number,
+        isString:  isType.String,
+        isArguments: isType.Arguments,
+        isDate: isType.Date,
+        isRegExp: isType.RegExp,
         isArray: isArray,
-        isFunction: isFunction,
+        isFunction: isType.Function,
         isObject: isObject,
         typeOf: function typeOf(o) {
             return _typeOf(arguments.length < 1 ? this : o);
@@ -284,6 +295,9 @@
         isPrimitive: no,
         isString: no,
         isUndefined: no,
+        isDate: no,
+        isRegExp: no,
+        isArguments: no,
         typeOf: function() { return 'object' },
         classOf: function() {
             return signatureOf(this).slice(8, -1);
@@ -293,7 +307,11 @@
     defaults(Function, defSpecs({
         isFunction: isFunction,
         isBuiltIn: _isBuiltIn,
-        identity: identity
+        identity: identity,
+        toString: function(f) {
+            if (arguments.length < 1) f = Function;
+            return functionToString.call(f)
+        }
     }));
     defaults(Function.prototype, defSpecs({
         isFunction: yes,
@@ -316,7 +334,7 @@
     }));
     // Boolean
     defaults(Boolean, defSpecs({
-        isBoolean: isBoolean
+        isBoolean: isType.Boolean
     }));
     defaults(Boolean.prototype, defSpecs({
         isBoolean: yes,
@@ -327,18 +345,15 @@
         toNumber: function() { return 1 * this }
     }));
     // Number
-    var _parseInt = parseInt,
-    _parseFloat = parseFloat,
-    _isFinite = isFinite;
     defaults(Number, defSpecs({
         // ES6
         // http://wiki.ecmascript.org/doku.php?id=harmony:proposals
         MAX_INTEGER: { value: Math.pow(2, 53) },
         EPSILON: { value: Math.pow(2, -52) },
-        parseInt: _parseInt,
-        parseFloat: _parseFloat,
-        isFinite: function(n) { return n === 1 * n && _isFinite(n) },
-        isNumber: isNumber,
+        parseInt: parseInt,
+        parseFloat: parseFloat,
+        isFinite: function(n) { return n === 1 * n && isFinite(n) },
+        isNumber: isType.Number,
         isInteger: function(n) {
             return n === 1 * n && _isFinite(n) && n % 1 === 0;
         },
@@ -357,8 +372,8 @@
         isPrimitive: yes,
         typeOf: function() { return 'number' },
         classOf: function() { return 'Number' },
-        isFinite: function() { return _isFinite(this) },
-        isNan: function() { return is(this, NaN) },
+        isFinite: function() { return isFinite(this) },
+        isNaN: function() { return is(this, NaN) },
         toBoolean: function() { return !!this },
         toInteger: function() {
             return this.isFinite() ? this - this % 1 : this;
@@ -366,7 +381,7 @@
     }));
     // String
     defaults(String, defSpecs({
-        isString: isString
+        isString: isType.String
     }));
     // String.prototype
     defaults(String.prototype, defSpecs({
@@ -449,6 +464,31 @@
             };
      });
     defaults(Array, defSpecs(arraySpec));
+    // RegExp
+    defaults(RegExp, defSpecs({
+        isRegExp: isType.RegExp
+    }));
+    defaults(RegExp.prototype, defSpecs({
+        isRegExp: yes
+    }));
+    // Date
+    defaults(Date, defSpecs({
+        isDate: isType.Date
+    }));
+    defaults(Date.prototype, defSpecs({
+        isDate: yes
+    }));
+    // Arguments
+    // is not extensible!
+    /*
+    var Arguments = (function(){return arguments}).constructor;
+    defaults(Arguments, defSpecs({
+        isArguments: isType.Arguments
+    }));
+    defaults(Arguments.prototype, defSpecs({
+        Arguments: yes
+    }));
+    */
     // Math
     defaults(Math, defSpecs({
         acosh: function acosh(n) { return Math.log(n + Math.sqrt(n * n - 1)) },
