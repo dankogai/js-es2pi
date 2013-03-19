@@ -25,6 +25,9 @@ Added because I felt it is unfair and consistent when
 
 #### Array.prototype.sorted( *[ comp ]* )
 
+`Array.prototype.sort` is destructive.  This is the next biggest surprise to
+`typeof null === 'object'`.  This is the non-destructive version thereof.
+
 #### Array. *fun* for each Array.prototype. *fun*
 
 And `Array`. *fun* for corresponding `Array.prototype`. *fun* like Firefox
