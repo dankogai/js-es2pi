@@ -30,26 +30,26 @@ if (this['window'] !== this) {
         '({}).equals({})':       function(){ ({}).equals({}) }
     });
     timethese(10e6, {
-        'typeof true':                function(){ typeof true },
-        'true.typeOf()':              function(){ true.typeOf()  },
         'typeof true  === "boolean"': function(){ typeof true === "boolean" },
-        'true.isBoolean()':           function(){ true.isBoolean()  },
-        'Object.isBoolean(true)':     function(){ Object.isBoolean(true) },
-        'typeof 0':                   function(){ typeof 0 },
-        '(0).typeOf()':               function(){ (0).typeOf() },
-        'typeof 0  === "number"':     function(){ typeof 0 === "number" },
-        '(0).isNumber()':             function(){ (0).isNumber() },
-        'Object.isNumber(0)':         function(){ Object.isNumber(0) },
-        'typeof ""':                  function(){ typeof "" },
-        '"".typeOf()':                function(){ "".typeOf() },
-        'typeof "" === "string"':     function(){ typeof "" === "string" },
-        '"".isString()':              function(){ "".isString() },
-        'Object.isString("")':        function(){ Object.isString("") },
-        'typeof []':                  function(){ typeof [] },
-        '[].typeOf()':                function(){ [].typeOf() },
+        'Object.isBoolean()':         function(){ true.isBoolean() },
+        'true.typeOf()':              function(){ true.typeOf()  },
+        'true.classOf()':             function(){ true.classOf() },
+        'Object.classOf(true)':       function(){ Object.classOf(true) }
+    });
+    timethese(10e6, {
         'typeof [] === "object"':     function(){ typeof [] === "object" },
         '[].isObject()':              function(){ [].isObject() },
-        'Object.isObject([])':        function(){ Object.isObject([]) }
+        'Object.isObject([])':        function(){ Object.isObject([]) },
+        '[].typeOf()':                function(){ [].typeOf() },
+        'Object.classOf([])':         function(){ Object.classOf([]) },
+        '[].classOf()':               function(){ [].classOf() },
+        'Array.isArray([])':          function(){ Array.isArray([]) },
+        '[].isArray()':               function(){ [].isArray() }
+    });
+    timethese(10e6, {
+        'Object.classOf(/(?:)/)':     function(){ Object.classOf(/(?:)/) },
+        '/(?:)/.classOf()':           function(){ /(?:)/.classOf() },
+        '/(?:)/.isRegExp()':          function(){ /(?:)/.isRegExp() }
     });
     var a = [], o = {};
     timethese(10e6, {

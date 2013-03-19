@@ -79,17 +79,21 @@
     };
     function isObject(o)    { return o === Object(o) };
     function isPrimitive(o) { return o !== Object(o) };
-    var isType = (function(types){
+    var isType = (function(types, classes) {
         var result = {};
-        types.forEach(function(t){
-            var sig = '[object ' + t + ']';
-            result[t] = function(o) { return toString.call(o) === sig };
+        types.forEach(function(typ) {
+            var t = typ.toLowerCase();
+            result[typ] = function(o) { return typeof o === t };
+        });
+        classes.forEach(function(cls) {
+            var sig = '[object ' + cls + ']';
+            result[cls] = function(o) { return toString.call(o) === sig };
         });
         return result;
-    })([
-        'Boolean', 'Number', 'String', 'Function',
-        'Arguments', 'Date', 'RegExp'
-    ]);
+    })(
+        ['Boolean', 'Number', 'String', 'Function'],
+        ['Arguments', 'Date', 'RegExp']
+    );
     var _typeOf = function(o) { return o === null ? 'null' : typeof(o) };
     var signatureOf = function(o) { return toString.call(o) };
     var is = Object.is || function is(x, y) {
@@ -256,8 +260,8 @@
     function isntThis(that) { return this !== that };
     function isntReally(that) { return isnt(this, that) };
     function equalsThis(that, check) { return equals(this, that, check) };
-    function cloneThis(deep, check){ return clone(this, deep, check) };
-    function itself(){ return this };
+    function cloneThis(deep, check) { return clone(this, deep, check) };
+    function itself() { return this };
     // Object
     defaults(Object, defSpecs({
         // crutial
@@ -282,8 +286,8 @@
         isNil: function isNil(o) { return o === void(0) || o === null },
         isPrimitive: isPrimitive,
         isBoolean: isType.Boolean,
-        isNumber:  isType.Number,
-        isString:  isType.String,
+        isNumber: isType.Number,
+        isString: isType.String,
         isArguments: isType.Arguments,
         isDate: isType.Date,
         isRegExp: isType.RegExp,
@@ -319,7 +323,7 @@
         is: isThis,
         isnt: isntThis,
         equals: equalsThis,
-        clone: cloneThis,
+        clone: cloneThis
     }));
     // Function
     defaults(Function, defSpecs({
@@ -328,7 +332,7 @@
         identity: identity,
         toString: function(f) {
             if (arguments.length < 1) f = Function;
-            return functionToString.call(f)
+            return functionToString.call(f);
         }
     }));
     defaults(Function.prototype, defSpecs({
@@ -345,7 +349,7 @@
         isBuiltIn: function() { return _isBuiltIn(this) },
         memoize: function(toStr, memo) {
             toStr = toStr || identity;
-            memo  = memo  || create(null);
+            memo = memo || create(null);
             var that = this;
             return function() {
                 var key = toStr.apply(this, arguments);
@@ -407,7 +411,7 @@
         is: isReally,
         isnt: isntReally,
         equals: isReally,
-        clone: itself,
+        clone: itself
     }));
     // String
     defaults(String, defSpecs({
@@ -503,14 +507,16 @@
         isRegExp: isType.RegExp
     }));
     defaults(RegExp.prototype, defSpecs({
-        isRegExp: yes
+        isRegExp: yes,
+        classOf: function() { return 'RegExp' }
     }));
     // Date
     defaults(Date, defSpecs({
         isDate: isType.Date
     }));
     defaults(Date.prototype, defSpecs({
-        isDate: yes
+        isDate: yes,
+        classOf: function() { return 'Date' }
     }));
     // Arguments
     // is not extensible!
