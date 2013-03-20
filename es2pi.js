@@ -35,20 +35,19 @@
         if (isPrimitive(target)) {
             throw new TypeError(target + ' is not an object');
         }
-        var safe = target[nameOfSafe] || (function(name) {
+        if (!has(target, nameOfSafe)) { // create safe
             try {
-                defineProperty(target, name, {
+                defineProperty(target, nameOfSafe, {
                     value: create(null),
                     // too fragile ?
                     writable: true,
                     configurable: true
                 });
-                return target[name];
             } catch (e) {
                 throw e;
             }
-        })(nameOfSafe);
-        var prev;
+        }
+        var safe = target[nameOfSafe], prev;
         if (isArray(target)) { // array needs special andling :-(
             // strictly check if prop is a stringified positive integer 
             if (prop.match(/^[0-9]+$/)) {
