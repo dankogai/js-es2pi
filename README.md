@@ -42,19 +42,23 @@ Table of Contents
 + [Math]
 + [Number]
 + [Object]
+  + [Object.clone]
+  + [Object.installProperty]
 + [Set]
 + [String]
  
 
-[Array]:        doc/Array.md
-[Boolean]:      doc/Boolean.md
-[Function]:     doc/Function.md
-[Map]:          doc/Map.md
-[Math]:         doc/Math.md
-[Number]:       doc/Number.md
-[Object]:       doc/Object.md
-[Set]:          doc/Set.md
-[String]:       doc/String.md
+[Array]:                  doc/Array.md
+[Boolean]:                doc/Boolean.md
+[Function]:               doc/Function.md
+[Map]:                    doc/Map.md
+[Math]:                   doc/Math.md
+[Number]:                 doc/Number.md
+[Object]:                 doc/Object.md
+[Object.clone]:           doc/Object.clone.md
+[Object.installProperty]: doc/Object.clone.md
+[Set]:                    doc/Set.md
+[String]:                 doc/String.md
 
 See Also
 --------
