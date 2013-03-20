@@ -21,10 +21,11 @@
     var nameOfSafe = '__previousProperties__';
     var hasOwnProperty = ''.hasOwnProperty;
     var has = function(o, k) { return hasOwnProperty.call(o, k) };
-    var defineProperty = Object.defineProperty,
-    defineProperties = Object.defineProperties,
-    getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor,
-    getOwnPropertyNames = Object.getOwnPropertyNames,
+    var O = Object,
+    defineProperty = O.defineProperty,
+    defineProperties = O.defineProperties,
+    getOwnPropertyDescriptor = O.getOwnPropertyDescriptor,
+    getOwnPropertyNames = O.getOwnPropertyNames,
     isArray = Array.isArray;
     var isPrimitive = function(o) {
         return Object(o) !== o;
@@ -49,10 +50,10 @@
         }
         var safe = target[nameOfSafe], prev;
         if (isArray(target)) { // array needs special andling :-(
-            // strictly check if prop is a stringified positive integer 
+            // strictly check if prop is a stringified positive integer
             if (prop.match(/^[0-9]+$/)) {
                 // and length will be updated
-                if (target.length <= prop * 1) { 
+                if (target.length <= prop * 1) {
                     prev = getOwnPropertyDescriptor(target, 'length');
                     if (!safe['length']) safe['length'] = [];
                     safe['length'].push(prev);
@@ -73,7 +74,7 @@
         return true;
     };
     function defaultProperty(target, prop, desc) {
-        return has(target, prop) 
+        return has(target, prop)
             ? false : installProperty(target, prop, desc);
     };
     function revertProperty(target, prop) {
@@ -127,11 +128,11 @@
             .forEach(function(name) {
                 var safe = target[nameOfSafe][name],
                 desc;
-                if (safe && safe.length){
+                if (safe && safe.length) {
                     desc = safe[0];
-                    if (desc) { 
-                        // Firefox: 
-                        // defining the length property on an array 
+                    if (desc) {
+                        // Firefox:
+                        // defining the length property on an array
                         // is not currently supported
                         if (isArray(target) && name === 'length') {
                             target.length = safe[0].value;
@@ -139,9 +140,9 @@
                             defineProperty(target, name, safe[0]);
                         }
                         return;
-                    } 
+                    }
                 }
-                delete target[name]
+                delete target[name];
             });
         delete target[nameOfSafe];
     };
@@ -153,12 +154,12 @@
         };
     };
     defaultProperties(Object, {
-        installProperty:   v2s(installProperty),
-        defaultProperty:   v2s(defaultProperty),
-        revertProperty:    v2s(revertProperty),
+        installProperty: v2s(installProperty),
+        defaultProperty: v2s(defaultProperty),
+        revertProperty: v2s(revertProperty),
         installProperties: v2s(installProperties),
         defaultProperties: v2s(defaultProperties),
-        revertProperties:  v2s(revertProperties),
+        revertProperties: v2s(revertProperties),
         restoreProperties: v2s(restoreProperties)
     });
 })(this);
@@ -169,26 +170,31 @@
     'use strict';
     var defaultProperties = Object.defaultProperties;
     if (!defaultProperties) throw Error('Object.defaultProperties missing');
+    // Shorthands for Builtins
+    var O = Object, F = Function, A = Array,
+    B = Boolean, N = Number, S = String, M = Math,
+    OP = O.prototype, FP = Function.prototype, AP = A.prototype,
+    BP = B.prototype, NP = Number.prototype, SP = S.prototype,
     // ES5 functions
-    var installProperties = Object.installProperties,
-    create = Object.create,
-    defineProperty = Object.defineProperty,
-    defineProperties = Object.defineProperties,
-    getOwnPropertyNames = Object.getOwnPropertyNames,
-    keys = Object.keys,
-    getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor,
-    getPrototypeOf = Object.getPrototypeOf,
-    freeze = Object.freeze,
-    isFrozen = Object.isFrozen,
-    isSealed = Object.isSealed,
-    seal = Object.seal,
-    isExtensible = Object.isExtensible,
-    preventExtensions = Object.preventExtensions,
-    hasOwnProperty = Object.prototype.hasOwnProperty,
-    toString = Object.prototype.toString,
-    isArray = Array.isArray,
-    slice = Array.prototype.slice,
-    sort = Array.prototype.sort;
+    create = O.create,
+    defineProperties = O.defineProperties,
+    defineProperty = O.defineProperty,
+    freeze = O.freeze,
+    getOwnPropertyDescriptor = O.getOwnPropertyDescriptor,
+    getOwnPropertyNames = O.getOwnPropertyNames,
+    getPrototypeOf = O.getPrototypeOf,
+    hasOwnProperty = OP.hasOwnProperty,
+    installProperties = O.installProperties,
+    isArray = A.isArray,
+    isExtensible = O.isExtensible,
+    isFrozen = O.isFrozen,
+    isSealed = O.isSealed,
+    keys = O.keys,
+    preventExtensions = O.preventExtensions,
+    seal = O.seal,
+    slice = AP.slice,
+    sort = AP.sort,
+    toString = OP.toString;
     // exported functions: function public(...){...}
     // private  functions: var private = function(...){...}
     function extend(dst, src) {
@@ -212,16 +218,16 @@
         getOwnPropertyNames(src).forEach(function(k) {
             specs[k] = {
                 value: src[k],
-                configurable:true,
-                writable:true,
-                enumerable:false
+                configurable: true,
+                writable: true,
+                enumerable: false
             };
         });
         return specs;
     };
-    var functionToString = Function.prototype.toString;
+    var functionToString = FP.toString;
     function isFunction(f)  { return typeof(f) === 'function' };
-    var _isBuiltIn = function(f) {
+    var isBuiltIn = function(f) {
         if (arguments.length < 1) return true; // Function.isBuiltin()
         if (!isFunction(f)) return false;
         try {
@@ -250,13 +256,13 @@
     );
     function typeOf(o) { return o === null ? 'null' : typeof(o) };
     function classOf(o) { return toString.call(o).slice(8, -1) };
-    var is = Object.is || function is(x, y) {
+    var is = O.is || function is(x, y) {
         return x === y
             ? x !== 0 ? true
             : (1 / x === 1 / y) // +-0
         : (x !== x && y !== y); // NaN
     };
-    var isnt = Object.isnt || function isnt(x, y) { return !is(x, y) };
+    var isnt = O.isnt || function isnt(x, y) { return !is(x, y) };
     var defaultCK = {
         descriptors: true,
         extensibility: true,
@@ -416,10 +422,10 @@
     };
     var _iter_postprocess = function(src, dst) {
         if (!isExtensible(src)) preventExtensions(dst);
-        if (isSealed(src))      seal(dst);
-        if (isFrozen(src))      freeze(dst);
+        if (isSealed(src)) seal(dst);
+        if (isFrozen(src)) freeze(dst);
     };
-    function map (o, f, ctx) {
+    function map(o, f, ctx) {
         if (isArray(o)) return o.map(f, ctx);
         _iter_precheck(o, f);
         var ret = create(getPrototypeOf(o));
@@ -429,7 +435,7 @@
         _iter_postprocess(o, ret);
         return ret;
     };
-    function filter (o, f, ctx) {
+    function filter(o, f, ctx) {
         if (isArray(o)) return o.filter(f, ctx);
         _iter_precheck(o, f);
         var ret = create(getPrototypeOf(o));
@@ -439,17 +445,17 @@
         _iter_postprocess(o, ret);
         return ret;
     };
-    function some (o, f, ctx) {
+    function some(o, f, ctx) {
         if (isArray(o)) return o.every(f, ctx);
         _iter_precheck(o, f);
-        var ks = keys(o), l = ks.length, i , k;
+        var ks = keys(o), l = ks.length, i, k;
         for (i = 0; i < l; ++i) {
             k = ks[i];
             if (f.call(ctx, o[k], k, o)) return true;
         }
         return false;
     };
-    function every (o, f, ctx) {
+    function every(o, f, ctx) {
         if (isArray(o)) return o.every(f, ctx);
         _iter_precheck(o, f);
         var ks = keys(o), l = ks.length, i, k;
@@ -477,7 +483,7 @@
     function itself() { return this };
     function classOfThis() { return classOf(this) };
     // Object
-    defaultProperties(Object, obj2specs({
+    defaultProperties(O, obj2specs({
         // crutial
         extend: extend,
         defaults: defaults,
@@ -497,9 +503,9 @@
         some: some,
         every: every,
         // types
-        isNull: function isNull(o) { return o === null },
-        isUndefined: function isUndefined(o) { return o === void(0) },
-        isNil: function isNil(o) { return o === void(0) || o === null },
+        isNull: function(o) { return o === null },
+        isUndefined: function(o) { return o === void(0) },
+        isNil: function(o) { return o === void(0) || o === null },
         isPrimitive: isPrimitive,
         isBoolean: isType.Boolean,
         isNumber: isType.Number,
@@ -511,10 +517,10 @@
         isFunction: isType.Function,
         isObject: isObject,
         typeOf: typeOf,
-        classOf: classOf,
+        classOf: classOf
     }));
     // Object.prototype // yes, we can!
-    defaultProperties(Object.prototype, obj2specs({
+    defaultProperties(OP, obj2specs({
         isObject: yes,
         isArray: no,
         isBoolean: no,
@@ -533,19 +539,19 @@
         is: isThis,
         isnt: isntThis,
         equals: equalsThis,
-        clone: cloneThis,
+        clone: cloneThis
     }));
     // Function
     defaultProperties(Function, obj2specs({
         isFunction: isFunction,
-        isBuiltIn: _isBuiltIn,
+        isBuiltIn: isBuiltIn,
         identity: identity,
         toString: function(f) {
             if (arguments.length < 1) f = Function;
             return functionToString.call(f);
         }
     }));
-    defaultProperties(Function.prototype, obj2specs({
+    defaultProperties(FP, obj2specs({
         isFunction: yes,
         isNil: no,
         isNull: no,
@@ -556,7 +562,7 @@
         isnt: isntThis,
         equals: isThis,
         clone: itself,
-        isBuiltIn: function() { return _isBuiltIn(this) },
+        isBuiltIn: function() { return isBuiltIn(this) },
         memoize: function(toStr, memo) {
             toStr = toStr || identity;
             memo = memo || create(null);
@@ -569,10 +575,10 @@
         }
     }));
     // Boolean
-    defaultProperties(Boolean, obj2specs({
+    defaultProperties(B, obj2specs({
         isBoolean: isType.Boolean
     }));
-    defaultProperties(Boolean.prototype, obj2specs({
+    defaultProperties(BP, obj2specs({
         isBoolean: yes,
         isObject: no,
         isPrimitive: yes,
@@ -585,9 +591,9 @@
         toNumber: function() { return 1 * this }
     }));
     // Number
-    defaultProperties(Number, obj2specs( {
-        MAX_INTEGER:  Math.pow(2, 53),
-        EPSILON: Math.pow(2, -52),
+    defaultProperties(N, obj2specs({
+        MAX_INTEGER: M.pow(2, 53),
+        EPSILON: M.pow(2, -52),
         // ES6
         // http://wiki.ecmascript.org/doku.php?id=harmony:proposals
         parseInt: parseInt,
@@ -597,16 +603,14 @@
         isInteger: function(n) {
             return n === 1 * n && isFinite(n) && n % 1 === 0;
         },
-        isNaN: function(n) { return Object.is(n, NaN) },
+        isNaN: function(n) { return is(n, NaN) },
         toInteger: function(n) {
             n *= 1;
-            return Object.is(n, NaN) ? 0
-                : Number.isFinite(n) ? n - n % 1
-                : n;
+            return is(n, NaN) ? 0 : isFinite(n) ? n - n % 1 : n;
         }
     }));
     // Number.prototype
-    defaultProperties(Number.prototype, obj2specs({
+    defaultProperties(NP, obj2specs({
         isNumber: yes,
         isObject: no,
         isPrimitive: yes,
@@ -693,7 +697,7 @@
             return result;
         },
         sorted: function() {
-            return sort.apply(slice.call(this), slice.call(arguments));
+            return sort.apply(slice.call(this), arguments);
         }
     }));
     // Array.fun for Array.prototype.fun like Firefox
@@ -704,7 +708,7 @@
      'forEach map reduce reduceRight filter some every',
      'repeat sorted']
         .join(' ').split(' ').forEach(function(name) {
-            var meth = Array.prototype[name];
+            var meth = AP[name];
             arrayMeths[name] = function() {
                 var args = slice.call(arguments),
                 a = args.shift();
@@ -741,24 +745,24 @@
     */
     // Math
     defaultProperties(Math, obj2specs({
-        acosh: function acosh(n) { return Math.log(n + Math.sqrt(n * n - 1)) },
-        asinh: function asinh(n) { return Math.log(n + Math.sqrt(n * n + 1)) },
-        atanh: function atanh(n) { return 0.5 * Math.log((1 + n) / (1 - n)) },
-        cbrt: function cbrt(n) { return Math.pow(n, 1 / 3) },
-        cosh: function cosh(n) { return (Math.exp(n) + Math.exp(-n)) / 2 },
-        expm1: function expm1(n) { return Math.exp(n) - 1 },
-        hypot: function hypot(x, y) { return Math.sqrt(x * x + y * y) || +0 },
-        log2: function log2(n) { return Math.log(n) / Math.LN2 },
-        log10: function log10(n) { return Math.log(n) / Math.LN10 },
-        log1p: function log1p(n) { return Math.log(1 + n) },
+        acosh: function acosh(n) { return M.log(n + M.sqrt(n * n - 1)) },
+        asinh: function asinh(n) { return M.log(n + M.sqrt(n * n + 1)) },
+        atanh: function atanh(n) { return 0.5 * M.log((1 + n) / (1 - n)) },
+        cbrt: function cbrt(n) { return M.pow(n, 1 / 3) },
+        cosh: function cosh(n) { return (M.exp(n) + M.exp(-n)) / 2 },
+        expm1: function expm1(n) { return M.exp(n) - 1 },
+        hypot: function hypot(x, y) { return M.sqrt(x * x + y * y) || +0 },
+        log2: function log2(n) { return M.log(n) / M.LN2 },
+        log10: function log10(n) { return M.log(n) / M.LN10 },
+        log1p: function log1p(n) { return M.log(1 + n) },
         sign: function sign(n) {
             n *= 1;
-            return n === 0 ? n : Object.is(n, NaN) ? n : n < 0 ? -1 : 1;
+            return n === 0 ? n : is(n, NaN) ? n : n < 0 ? -1 : 1;
         },
-        sinh: function sinh(n) { return (Math.exp(n) - Math.exp(-n)) / 2 },
+        sinh: function sinh(n) { return (M.exp(n) - M.exp(-n)) / 2 },
         tanh: function tanh(n) {
-            var u = Math.exp(n),
-            d = Math.exp(-n);
+            var u = M.exp(n),
+            d = M.exp(-n);
             return (u - d) / (u + d);
         },
         trunc: function trunc(n) { return ~~n }
@@ -816,10 +820,10 @@
                 return '.' + v;
             case 'number':
                 return (
-                    0 > v ? ''
-                        : Object.is(v, -0) ? '-'
-                        : v >= 0 ? '+'
-                        : ''
+                    0 > v ?           ''
+                        : is(v, -0) ? '-'
+                        : v >= 0    ? '+'
+                        :             ''
                 ) + v.toString(10);
             default:
                 return '' + v;
@@ -974,10 +978,10 @@
                 return _Map.prototype.keys.apply(this);
             },
             // mask'em out
-            get: {value: undefined},
-            set: {value: undefined},
-            keys: {value: undefined},
-            items: {value: undefined}
+            get:   { value: undefined },
+            set:   { value: undefined },
+            keys:  { value: undefined },
+            items: { value: undefined }
         }));
         // notice installProperteies is used to override the original
         installProperties(root, obj2specs({
