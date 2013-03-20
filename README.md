@@ -56,7 +56,7 @@ Table of Contents
 [Number]:                 doc/Number.md
 [Object]:                 doc/Object.md
 [Object.clone]:           doc/Object.clone.md
-[Object.installProperty]: doc/Object.clone.md
+[Object.installProperty]: doc/Object.installProperty.md
 [Set]:                    doc/Set.md
 [String]:                 doc/String.md
 
