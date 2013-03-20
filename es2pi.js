@@ -8,26 +8,164 @@
  *
  */
 
+// property installer
+// https://github.com/dankogai/js-installproperty
+
 (function(root) {
     'use strict';
-    // exported functions: function public(...){...}
-    // private  functions: var private = function(...){...}
-    var functionToString = Function.prototype.toString;
-    function isFunction(f)  { return typeof(f) === 'function' };
-    var _isBuiltIn = function(f) {
-        if (arguments.length < 1) return true; // Function.isBuiltin()
-        if (!isFunction(f)) return false;
-        try {
-            var body = functionToString.call(f).replace(/^[^{]+/, '');
-            return !(new Function(body));
-        } catch (e) {
-            return true;
+    if (typeof Object.installProperty === 'function') return;
+    var create = Object.create;
+    if (!create || 'hasOwnProperty' in create(null)) {
+        throw new Error('ES5 unsupported');
+    }
+    var nameOfSafe = '__previousProperties__';
+    var hasOwnProperty = ''.hasOwnProperty;
+    var has = function(o, k) { return hasOwnProperty.call(o, k) };
+    var defineProperty = Object.defineProperty,
+    defineProperties = Object.defineProperties,
+    getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor,
+    getOwnPropertyNames = Object.getOwnPropertyNames,
+    isArray = Array.isArray;
+    var isPrimitive = function(o) {
+        return Object(o) !== o;
+    };
+    // let the show begin!
+    function installProperty(target, prop, desc) {
+        if (prop === nameOfSafe) return;
+        if (isPrimitive(target)) {
+            throw new TypeError(target + ' is not an object');
+        }
+        var safe = target[nameOfSafe] || (function(name) {
+            try {
+                defineProperty(target, name, {
+                    value: create(null),
+                    // too fragile ?
+                    writable: true,
+                    configurable: true
+                });
+                return target[name];
+            } catch (e) {
+                throw e;
+            }
+        })(nameOfSafe);
+        var prev;
+        if (isArray(target)) { // array needs special andling :-(
+            // strictly check if prop is a stringified positive integer 
+            if (prop.match(/^[0-9]+$/)) {
+                // and length will be updated
+                if (target.length <= prop * 1) { 
+                    prev = getOwnPropertyDescriptor(target, 'length');
+                    if (!safe['length']) safe['length'] = [];
+                    safe['length'].push(prev);
+                    target.length = prop;
+                }
+            }
+        }
+        prev = getOwnPropertyDescriptor(target, prop);
+        if (prev) {
+            if (!prev.configurable) return false;
+            if (!prev.writable) return true;
+        }
+        desc.configurable = true;
+        desc.writable = true;
+        if (!safe[prop]) safe[prop] = [];
+        safe[prop].push(prev);
+        defineProperty(target, prop, desc);
+        return true;
+    };
+    function defaultProperty(target, prop, desc) {
+        return has(target, prop) 
+            ? false : installProperty(target, prop, desc);
+    };
+    function revertProperty(target, prop) {
+        if (prop === nameOfSafe) return;
+        var safe = target[nameOfSafe];
+        if (!safe) return;
+        if (!safe[prop]) return;
+        if (!safe[prop].length) {
+            delete safe[prop];
+            return;
+        }
+        var prev = safe[prop].pop();
+        if (!prev) {
+            delete target[prop];
+        } else {
+            var curr = getOwnPropertyDescriptor(target, prop);
+            defineProperty(target, prop, prev);
+            return curr;
         }
     };
-    if (!_isBuiltIn(Object.freeze)) { // am I paranoid ?
-        throw Error('ES5 support required');
-    }
-    var create = Object.create,
+    function installProperties(target, descs) {
+        getOwnPropertyNames(descs)
+            .filter(function(k) {return k !== nameOfSafe})
+            .forEach(function(name) {
+                installProperty(target, name, descs[name]);
+            });
+        return target;
+    };
+    function defaultProperties(target, descs) {
+        getOwnPropertyNames(descs)
+            .filter(function(k) {return k !== nameOfSafe})
+            .forEach(function(name) {
+                defaultProperty(target, name, descs[name]);
+            });
+        return target;
+    };
+    function revertProperties(target, descs) {
+        descs = descs || target[nameOfSafe];
+        var prevs = create(null);
+        getOwnPropertyNames(descs)
+            .filter(function(k) {return k !== nameOfSafe})
+            .forEach(function(name) {
+                var prev = revertProperty(target, name, descs[name]);
+                if (prev) defineProperty(prevs, name, prev);
+            });
+        return prevs;
+    };
+    function restoreProperties(target) {
+        getOwnPropertyNames(target[nameOfSafe])
+            .filter(function(k) {return k !== nameOfSafe})
+            .forEach(function(name) {
+                var safe = target[nameOfSafe][name],
+                desc;
+                if (safe && safe.length){
+                    desc = safe[0];
+                    if (desc) { 
+                        defineProperty(target, name, safe[0]);
+                        return;
+                    } 
+                }
+                delete target[name]
+            });
+        delete target[nameOfSafe];
+    };
+    var v2s = function(v) {
+        return {
+            value: v,
+            configurable: true,
+            writable: true
+        };
+    };
+    defaultProperties(Object, {
+        installProperty:   v2s(installProperty),
+        defaultProperty:   v2s(defaultProperty),
+        revertProperty:    v2s(revertProperty),
+        installProperties: v2s(installProperties),
+        defaultProperties: v2s(defaultProperties),
+        revertProperties:  v2s(revertProperties),
+        restoreProperties: v2s(restoreProperties)
+    });
+})(this);
+//
+// Main Block
+//
+(function(root) {
+    'use strict';
+    var defaultProperties = Object.defaultProperties;
+    if (!defaultProperties) throw Error('Object.defaultProperties missing');
+    // ES5 functions
+    var installProperties = Object.installProperties,
+    create = Object.create,
     defineProperty = Object.defineProperty,
     defineProperties = Object.defineProperties,
     getOwnPropertyNames = Object.getOwnPropertyNames,
@@ -45,7 +183,8 @@
     isArray = Array.isArray,
     slice = Array.prototype.slice,
     sort = Array.prototype.sort;
-    // Utility functions; some exported
+    // exported functions: function public(...){...}
+    // private  functions: var private = function(...){...}
     function extend(dst, src) {
         getOwnPropertyNames(src).forEach(function(k) {
             defineProperty(
@@ -62,20 +201,29 @@
         });
         return dst;
     };
-    var defspec = extend(
-        create(null), getOwnPropertyDescriptor(Object, 'freeze')
-    );
-    delete defspec.value;
-    var toSpec = function(v) {
-        return typeof(v) !== 'function' ? v
-            : extend(extend(create(null), defspec), { value: v });
-    };
-    var defSpecs = function(src) {
+    var obj2specs = function(src) {
         var specs = create(null);
         getOwnPropertyNames(src).forEach(function(k) {
-            defineProperty(specs, k, toSpec(src[k]));
+            specs[k] = {
+                value: src[k],
+                configurable:true,
+                writable:true,
+                enumerable:false
+            };
         });
         return specs;
+    };
+    var functionToString = Function.prototype.toString;
+    function isFunction(f)  { return typeof(f) === 'function' };
+    var _isBuiltIn = function(f) {
+        if (arguments.length < 1) return true; // Function.isBuiltin()
+        if (!isFunction(f)) return false;
+        try {
+            var body = functionToString.call(f).replace(/^[^{]+/, '');
+            return !(new Function(body));
+        } catch (e) {
+            return true;
+        }
     };
     function isObject(o)    { return o === Object(o) };
     function isPrimitive(o) { return o !== Object(o) };
@@ -323,7 +471,7 @@
     function itself() { return this };
     function classOfThis() { return classOf(this) };
     // Object
-    defaults(Object, defSpecs({
+    defaultProperties(Object, obj2specs({
         // crutial
         extend: extend,
         defaults: defaults,
@@ -360,7 +508,7 @@
         classOf: classOf,
     }));
     // Object.prototype // yes, we can!
-    defaults(Object.prototype, defSpecs({
+    defaultProperties(Object.prototype, obj2specs({
         isObject: yes,
         isArray: no,
         isBoolean: no,
@@ -382,7 +530,7 @@
         clone: cloneThis,
     }));
     // Function
-    defaults(Function, defSpecs({
+    defaultProperties(Function, obj2specs({
         isFunction: isFunction,
         isBuiltIn: _isBuiltIn,
         identity: identity,
@@ -391,7 +539,7 @@
             return functionToString.call(f);
         }
     }));
-    defaults(Function.prototype, defSpecs({
+    defaultProperties(Function.prototype, obj2specs({
         isFunction: yes,
         isNil: no,
         isNull: no,
@@ -415,10 +563,10 @@
         }
     }));
     // Boolean
-    defaults(Boolean, defSpecs({
+    defaultProperties(Boolean, obj2specs({
         isBoolean: isType.Boolean
     }));
-    defaults(Boolean.prototype, defSpecs({
+    defaultProperties(Boolean.prototype, obj2specs({
         isBoolean: yes,
         isObject: no,
         isPrimitive: yes,
@@ -431,11 +579,11 @@
         toNumber: function() { return 1 * this }
     }));
     // Number
-    defaults(Number, defSpecs({
+    defaultProperties(Number, obj2specs( {
+        MAX_INTEGER:  Math.pow(2, 53),
+        EPSILON: Math.pow(2, -52),
         // ES6
         // http://wiki.ecmascript.org/doku.php?id=harmony:proposals
-        MAX_INTEGER: { value: Math.pow(2, 53) },
-        EPSILON: { value: Math.pow(2, -52) },
         parseInt: parseInt,
         parseFloat: parseFloat,
         isFinite: function(n) { return n === 1 * n && isFinite(n) },
@@ -452,7 +600,7 @@
         }
     }));
     // Number.prototype
-    defaults(Number.prototype, defSpecs({
+    defaultProperties(Number.prototype, obj2specs({
         isNumber: yes,
         isObject: no,
         isPrimitive: yes,
@@ -470,11 +618,11 @@
         clone: itself
     }));
     // String
-    defaults(String, defSpecs({
+    defaultProperties(String, obj2specs({
         isString: isType.String
     }));
     // String.prototype
-    defaults(String.prototype, defSpecs({
+    defaultProperties(String.prototype, obj2specs({
         isString: yes,
         isObject: no,
         isPrimitive: yes,
@@ -516,7 +664,7 @@
         }
     }));
     // Array
-    defaults(Array, defSpecs({
+    defaultProperties(Array, obj2specs({
         // ES6
         from: function(a) {
             return slice.call(a);
@@ -526,7 +674,7 @@
         }
     }));
     // Array.prototype
-    defaults(Array.prototype, defSpecs({
+    defaultProperties(Array.prototype, obj2specs({
         isArray: yes,
         //typeOf: function typeOf(){ return 'array' },
         classOf: function classOf() { return 'Array' },
@@ -543,7 +691,7 @@
         }
     }));
     // Array.fun for Array.prototype.fun like Firefox
-    var arraySpec = {};
+    var arrayMeths = {};
     ['join reverse sort',
      'push pop shift unshift splice',
      'concat slice indexOf lastIndexOf',
@@ -551,42 +699,42 @@
      'repeat sorted']
         .join(' ').split(' ').forEach(function(name) {
             var meth = Array.prototype[name];
-            arraySpec[name] = function() {
+            arrayMeths[name] = function() {
                 var args = slice.call(arguments),
                 a = args.shift();
                 return meth.apply(a, args);
             };
-     });
-    defaults(Array, defSpecs(arraySpec));
+        });
+    defaultProperties(Array, obj2specs(arrayMeths));
     // RegExp
-    defaults(RegExp, defSpecs({
+    defaultProperties(RegExp, obj2specs({
         isRegExp: isType.RegExp
     }));
-    defaults(RegExp.prototype, defSpecs({
+    defaultProperties(RegExp.prototype, obj2specs({
         isRegExp: yes,
         classOf: function() { return 'RegExp' }
     }));
     // Date
-    defaults(Date, defSpecs({
+    defaultProperties(Date, obj2specs({
         isDate: isType.Date
     }));
-    defaults(Date.prototype, defSpecs({
+    defaultProperties(Date.prototype, obj2specs({
         isDate: yes,
         classOf: function() { return 'Date' }
     }));
     // Arguments
     // is not extensible!
     /*
-    var Arguments = (function(){return arguments}).constructor;
-    defaults(Arguments, defSpecs({
-        isArguments: isType.Arguments
-    }));
-    defaults(Arguments.prototype, defSpecs({
-        Arguments: yes
-    }));
+      var Arguments = (function(){return arguments}).constructor;
+      defaultProperties(Arguments, obj2specs({
+      isArguments: isType.Arguments
+      }));
+      defaultProperties(Arguments.prototype, obj2specs({
+      Arguments: yes
+      }));
     */
     // Math
-    defaults(Math, defSpecs({
+    defaultProperties(Math, obj2specs({
         acosh: function acosh(n) { return Math.log(n + Math.sqrt(n * n - 1)) },
         asinh: function asinh(n) { return Math.log(n + Math.sqrt(n * n + 1)) },
         atanh: function atanh(n) { return 0.5 * Math.log((1 + n) / (1 - n)) },
@@ -629,7 +777,7 @@
         if (!HASFOROF) return;       // do nothing if for-of is absent
         // Firefox can take advantage of this.
         (function(specs) {
-            extend(Map.prototype, defSpecs(specs));
+            extend(Map.prototype, obj2specs(specs));
         })({
             items: eval([
                 '(function (){',
@@ -653,21 +801,10 @@
                 '})'
             ].join('\n'))
         });
-        (function(specs) {
-            extend(Set.prototype, defSpecs(specs));
-        })({
-            values: eval([
-                '(function (){',
-                'var result = [];',
-                'for (var i of this) result.push(i);',
-                'return result;',
-                '})'
-            ].join('\n'))
-        });
     })();
     (function() {
         if (HASITERABLEMAP) return; // do nothing if Map is full-featured
-        if (HASFOROF) return;       // see previous (function(){})
+        if (HASFOROF) return;       // see the previous (function(){})
         // for the rest of us
         var val2str = function(t, v) {
             switch (t) {
@@ -724,7 +861,7 @@
                 }
             });
         };
-        defaults(_Map.prototype, defSpecs({
+        defaultProperties(_Map.prototype, obj2specs({
             has: function(k) {
                 var t = typeOf(k),
                 s;
@@ -825,7 +962,7 @@
             slice.apply(this, slice.call(arguments));
         };
         _Set.prototype = _Map();
-        defaults(_Set.prototype, defSpecs({
+        defaultProperties(_Set.prototype, obj2specs({
             add: function(k) {
                 _Map.prototype.set.apply(this, [k, true]);
             },
@@ -838,13 +975,8 @@
             keys: {value: undefined},
             items: {value: undefined}
         }));
-        // native but incomplete so relocate
-        if (HASWEAKMAP) {
-            extend(_Map, {__Native__: Map});
-            extend(_Set, {__Native__: Set});
-        }
-        // notice extend is used to override the original
-        extend(root, defSpecs({
+        // notice installProperteies is used to override the original
+        installProperties(root, obj2specs({
             Map: _Map,
             Set: _Set
         }));
