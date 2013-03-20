@@ -123,7 +123,7 @@
             vx = WeakMap();
             vy = WeakMap();
         }
-        ck = defaults(ck || {}, defaultCK);
+        ck = defaults(defaults(create(null), ck || {}), defaultCK);
         return (function _equals(x, y) {
             if (isPrimitive(x)) return is(x, y);
             if (isFunction(x)) return is(x, y);
@@ -198,7 +198,7 @@
         if (deep && HASWEAKMAP) {
             wm = WeakMap();
         }
-        ck = defaults(ck || {}, defaultCK);
+        ck = defaults(defaults(create(null), ck || {}), defaultCK);
         return (function _clone(src) {
             // primitives and functions
             if (isPrimitive(src)) return src;
@@ -249,12 +249,70 @@
             }
         })(src);
     };
+    // generic iterator functions
+    function values(o) {
+        return keys(o).map(function(k) { return o[k] });
+    };
+    function items(o) {
+        return keys(o).map(function(k) { return [k, o[k]] });
+    };
+    var _iter_precheck = function(o, f) {
+        if (isPrimitive(o)) throw new TypeError(o + ' is not iterable.');
+        if (!isFunction(f)) throw new TypeError(f + ' is not callable.');
+    };
+    var _iter_postprocess = function(src, dst) {
+        if (!isExtensible(src)) preventExtensions(dst);
+        if (isSealed(src))      seal(dst);
+        if (isFrozen(src))      freeze(dst);
+    };
+    function map (o, f, ctx) {
+        if (isArray(o)) return o.map(f, ctx);
+        _iter_precheck(o, f);
+        var ret = create(getPrototypeOf(o));
+        keys(o).forEach(function(k) {
+            ret[k] = f.call(ctx, o[k], k, o);
+        });
+        _iter_postprocess(o, ret);
+        return ret;
+    };
+    function filter (o, f, ctx) {
+        if (isArray(o)) return o.filter(f, ctx);
+        _iter_precheck(o, f);
+        var ret = create(getPrototypeOf(o));
+        keys(o).forEach(function(k) {
+            if (f.call(ctx, o[k], k, o)) ret[k] = o[k];
+        });
+        _iter_postprocess(o, ret);
+        return ret;
+    };
+    function some (o, f, ctx) {
+        if (isArray(o)) return o.every(f, ctx);
+        _iter_precheck(o, f);
+        var ks = keys(o), l = ks.length, i , k;
+        for (i = 0; i < l; ++i) {
+            k = ks[i];
+            if (f.call(ctx, o[k], k, o)) return true;
+        }
+        return false;
+    };
+    function every (o, f, ctx) {
+        if (isArray(o)) return o.every(f, ctx);
+        _iter_precheck(o, f);
+        var ks = keys(o), l = ks.length, i, k;
+        for (i = 0; i < l; ++i) {
+            k = ks[i];
+            if (!f.call(ctx, o[k], k, o)) return false;
+        }
+        return true;
+    };
     // Functions that Return constant values
     function yes() { return true };
     function no() { return false };
     // more functions
     function identity(a) { return a };
     function has(o, k) { return hasOwnProperty.call(o, k) };
+    function get(o, k) { return has(o, k) ? o[k] : undefined };
+    function set(o, k, v) { o[k] = v };
     // and methods
     function isThis(that) { return this === that };
     function isReally(that) { return is(this, that) };
@@ -275,13 +333,15 @@
         clone: clone,
         equals: equals,
         // object as lesser Map
-        values: function values(o) {
-            return keys(o).map(function(k) { return o[k] });
-        },
-        items: function items(o) {
-            return keys(o).map(function(k) { return [k, o[k]] });
-        },
+        values: values,
+        items: items,
         has: has,
+        get: get,
+        set: set,
+        map: map,
+        filter: filter,
+        some: some,
+        every: every,
         // types
         isNull: function isNull(o) { return o === null },
         isUndefined: function isUndefined(o) { return o === void(0) },
@@ -319,7 +379,7 @@
         is: isThis,
         isnt: isntThis,
         equals: equalsThis,
-        clone: cloneThis
+        clone: cloneThis,
     }));
     // Function
     defaults(Function, defSpecs({
@@ -381,7 +441,7 @@
         isFinite: function(n) { return n === 1 * n && isFinite(n) },
         isNumber: isType.Number,
         isInteger: function(n) {
-            return n === 1 * n && _isFinite(n) && n % 1 === 0;
+            return n === 1 * n && isFinite(n) && n % 1 === 0;
         },
         isNaN: function(n) { return Object.is(n, NaN) },
         toInteger: function(n) {

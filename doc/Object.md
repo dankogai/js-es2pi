@@ -54,12 +54,30 @@ See [Object.clone] for details.
 + Object.prototype.isString()
 + Object.prototype.isUndefined()
 
-### Object as a Map
+### Object as a Collection
+
+They DO NOT have prototypal versions to prevent `Object.prototype`
+from congesting.
 
 + Object.has( *obj*, *prop* )
++ Object.get( *obj*, *prop* )
++ Object.set( *obj*, *prop*, *val* )
 + ( Object.keys( *obj* ) we already have since ES5 )
 + Object.values( *obj* )
 + Object.items( *obj* )
+
+The following is more generic equivalent of `Array` iterators.
+
++ Object.map( *obj*, *fun* *[, ctx]* )
++ Object.filter( *obj*, *fun* *[, ctx]* )
++ Object.some( *obj*, *fun* *[, ctx]* )
++ Object.every( *obj*, *fun* *[, ctx]* )
+
+Like Array.map and like, *fun* are functions with argumets below:
+
+  function( *value*, *key*, *obj* );
+
+Unlike Array.map, where *key* is an integer, *key* is a string.
 
 See Also:
 ---------

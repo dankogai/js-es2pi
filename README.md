@@ -10,7 +10,7 @@ Description
 
 In short, es2pi is a collection of ES6 polyfills + methods missing even in ES6.
 
-### Why reinvented the wheel?
+### Why reinvent the wheel?
 
 Because:
 
@@ -61,3 +61,4 @@ See Also
 
 + http://wiki.ecmascript.org/doku.php?id=harmony:proposals
 + https://wiki.mozilla.org/ES6_plans
++ http://kangax.github.com/es5-compat-table/es6/
