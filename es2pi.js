@@ -131,7 +131,14 @@
                 if (safe && safe.length){
                     desc = safe[0];
                     if (desc) { 
-                        defineProperty(target, name, safe[0]);
+                        // Firefox: 
+                        // defining the length property on an array 
+                        // is not currently supported
+                        if (isArray(target) && name === 'length') {
+                            target.length = safe[0].value;
+                        } else {
+                            defineProperty(target, name, safe[0]);
+                        }
                         return;
                     } 
                 }
@@ -776,9 +783,7 @@
         if (HASITERABLEMAP) return;  // do nothing if Map is full-featured
         if (!HASFOROF) return;       // do nothing if for-of is absent
         // Firefox can take advantage of this.
-        (function(specs) {
-            extend(Map.prototype, obj2specs(specs));
-        })({
+        defaultProperties(Map.prototype, obj2specs({
             items: eval([
                 '(function (){',
                 'var result = [];',
@@ -800,7 +805,7 @@
                 'return result;',
                 '})'
             ].join('\n'))
-        });
+        }));
     })();
     (function() {
         if (HASITERABLEMAP) return; // do nothing if Map is full-featured
