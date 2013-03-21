@@ -1,5 +1,5 @@
 /*
- * $Id: es2pi.js,v 0.4 2013/03/20 15:38:07 dankogai Exp dankogai $
+ * $Id: es2pi.js,v 0.5 2013/03/21 05:35:33 dankogai Exp dankogai $
  *
  *  (c) 2013 Dan Kogai
  *
@@ -64,7 +64,7 @@
         prev = getOwnPropertyDescriptor(target, prop);
         if (prev) {
             if (!prev.configurable) return false;
-            if (!prev.writable) return true;
+            if (!prev.writable)     return false;
         }
         desc.configurable = true;
         desc.writable = true;
