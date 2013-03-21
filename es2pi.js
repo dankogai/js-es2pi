@@ -474,14 +474,21 @@
     function get(o, k) { return has(o, k) ? o[k] : undefined };
     function set(o, k, v) { o[k] = v };
     // and methods
+    function toMethod(f) {
+        return function() { 
+            return f.apply(null, [this].concat(arguments));
+        }
+    };
     function isThis(that) { return this === that };
     function isReally(that) { return is(this, that) };
+    //var isReally = toMethod(is);
     function isntThis(that) { return this !== that };
     function isntReally(that) { return isnt(this, that) };
     function equalsThis(that, check) { return equals(this, that, check) };
     function cloneThis(deep, check) { return clone(this, deep, check) };
     function itself() { return this };
     function classOfThis() { return classOf(this) };
+
     // Object
     defaultProperties(O, obj2specs({
         // crutial
@@ -542,14 +549,15 @@
         clone: cloneThis
     }));
     // Function
-    defaultProperties(Function, obj2specs({
+    defaultProperties(F, obj2specs({
         isFunction: isFunction,
         isBuiltIn: isBuiltIn,
         identity: identity,
         toString: function(f) {
             if (arguments.length < 1) f = Function;
             return functionToString.call(f);
-        }
+        },
+        toMethod: toMethod,
     }));
     defaultProperties(FP, obj2specs({
         isFunction: yes,
@@ -571,6 +579,14 @@
                 var key = toStr.apply(this, arguments);
                 if (has(memo, key)) return memo[key];
                 return memo[key] = that.apply(this, arguments);
+            };
+        },
+        toFunction: function() {
+            var method = this;
+            return function() {
+                var args = slice.call(arguments),
+                a = args.shift();
+                return method.apply(a, args);
             };
         }
     }));

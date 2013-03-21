@@ -23,6 +23,27 @@ in JavaScript.  Handy to check if the function is polyfilled.
 
 ### Goodies
 
+#### Function.toMethod( *fun* )
+
+Converts the function *fun* to a method, which is a function that
+takes `this` as the first argument of the original.
+
+````javascript
+String.prototype.to_i = Function.toMethod(parseInt);
+"42.195".to_i(); // 42
+````
+
+#### Function.prototype.toFunction()
+
+Converts the method to a function whose first argument is bound to 
+`this` in the original method.
+
+````
+var has = ({}).hasOwnProperty.toFunction();
+has({}, 'hasOwnProperty');                // false
+has(Object.prototype, 'hasOwnProperty');  // true
+````
+
 #### Function.prototype.memoize( *[ toStr, memo ]* )
 
 Turns the function into a memoized version.  The resulting function
