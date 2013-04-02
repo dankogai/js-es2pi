@@ -1,7 +1,7 @@
 /*
  * es2pi.js
  *
- *  VERSION: 0.0.5
+ *  VERSION: 0.0.6
  *
  *  (c) 2013 Dan Kogai
  *
@@ -420,9 +420,7 @@
         });
     });
     install(String.prototype, 'toArrayOfUChars', function() {
-        var ret = [];
-        ('' + this).replace(re_uchars, function(cp) { ret.push(cp) });
-        return ret;
+        return ('' + this).match(re_uchars);
     });
     install(String.prototype, 'uCharAt', function(n) {
         return ('' + this).toArrayOfUChars()[n];
